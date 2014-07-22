@@ -1,0 +1,7 @@
+[
+  "src/_init*",
+  "src/lat_lon*",
+  "src/coord*",
+  "src/geo*",
+  "src/to_export*"
+]
