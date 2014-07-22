@@ -10,12 +10,9 @@ describe 'LatLon', ->
     ll.lon.should.be.eql 135.5
 
   it 'should throw range error', ->
-    new geohash64.LatLon(110, 135).should.throwError
-#
-#self.assertRaises(
-#  geohash64.OutOfRangeError,
-#  geohash64.LatLon, 45.1, -190)
-#
+    ( -> new geohash64.LatLon(110, 135)).should.throw()
+    ( -> new geohash64.LatLon(45.1, -190)).should.throw()
+
 #def test_encode(self):
 #"""LatLon→hash"""
 #ll = geohash64.LatLon(35.026131, 135.780673)

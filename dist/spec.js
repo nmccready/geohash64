@@ -3,7 +3,7 @@
  *
  * @version: 0.0.0
  * @author: Nicholas McCready
- * @date: Tue Jul 22 2014 18:35:12 GMT-0400 (EDT)
+ * @date: Tue Jul 22 2014 19:21:29 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
@@ -72,7 +72,12 @@ MIT license.
       return ll.lon.should.be.eql(135.5);
     });
     return it('should throw range error', function() {
-      return new geohash64.LatLon(110, 135).should.throwError;
+      (function() {
+        return new geohash64.LatLon(110, 135);
+      }).should["throw"]();
+      return (function() {
+        return new geohash64.LatLon(45.1, -190);
+      }).should["throw"]();
     });
   });
 

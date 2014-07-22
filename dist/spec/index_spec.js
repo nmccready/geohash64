@@ -13,7 +13,12 @@ MIT license.
       return ll.lon.should.be.eql(135.5);
     });
     return it('should throw range error', function() {
-      return new geohash64.LatLon(110, 135).should.throwError;
+      (function() {
+        return new geohash64.LatLon(110, 135);
+      }).should["throw"]();
+      return (function() {
+        return new geohash64.LatLon(45.1, -190);
+      }).should["throw"]();
     });
   });
 
