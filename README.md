@@ -1,7 +1,7 @@
 geodecoder64js
 ==============
 
-Project is attempt of porting [Jefferey Sambells](http://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java) Java code for decoding google base264 geo encodings to nodejs.
+Project is attempt of porting [python-geohash64](https://code.google.com/p/python-geohash64/source/browse/trunk/geohash64.py) base64 geo encodings to nodejs.
 
 
 *Dependencies*
