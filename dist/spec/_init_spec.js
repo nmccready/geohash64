@@ -17,7 +17,7 @@
       }
     });
     it('lodash exists', function() {
-      if (!_) {
+      if (_ == null) {
         throw new Error('lodash or underscore undefined');
       }
     });

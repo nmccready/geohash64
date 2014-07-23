@@ -1,7 +1,7 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  ns2.namespace('geohash64');
+  namespace('geohash64');
 
   geohash64.Coordinate = (function() {
     function Coordinate(n, e) {

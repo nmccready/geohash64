@@ -23,22 +23,28 @@
   if (isNode) {
     _global.bigint = require('bigint');
     _global.base64 = require('base-64');
+    _global._ = require('lodash');
     _global.ns2 = require('ns2');
     _global.namespace = ns2.namespace;
   }
 
-  namespace('geohash64.Base64Map');
+  namespace('geohash64');
 
-  geohash64.Base64Map = (function() {
-    var base64Map, base64Str, i, _i, _ref;
-    base64Str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-    base64Map = {};
-    for (i = _i = 0, _ref = base64Str.length; _i <= _ref; i = _i += 1) {
-      base64Map[base64Str[i]] = i;
+
+  /*
+   * base64url characters
+   */
+
+  _global.geohash64 = (function() {
+    var codeMap, i, indexStr, _i, _ref;
+    indexStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+    codeMap = {};
+    for (i = _i = 0, _ref = indexStr.length; _i <= _ref; i = _i += 1) {
+      codeMap[indexStr[i]] = i;
     }
     return {
-      base64Str: base64Str,
-      base64Map: base64Map
+      codeMap: codeMap,
+      indexStr: indexStr
     };
   })();
 

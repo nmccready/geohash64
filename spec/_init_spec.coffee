@@ -12,7 +12,7 @@ describe 'sanity', ->
     throw new Error() unless should
 
   it 'lodash exists', ->
-    throw new Error 'lodash or underscore undefined' unless _
+    throw new Error 'lodash or underscore undefined' unless _?
 
   it 'ns2 is loaded', ->
     throw new Error('ns2 is missing') if not ns2

@@ -1,7 +1,7 @@
 ###############################################################################
 # Coordinate Class
 ###############################################################################
-ns2.namespace 'geohash64'
+namespace 'geohash64'
 class geohash64.Coordinate
   constructor: (n, e) ->
     @n = n

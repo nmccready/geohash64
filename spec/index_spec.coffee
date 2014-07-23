@@ -13,25 +13,19 @@ describe 'LatLon', ->
     ( -> new geohash64.LatLon(110, 135)).should.throw()
     ( -> new geohash64.LatLon(45.1, -190)).should.throw()
 
-#def test_encode(self):
-#"""LatLon→hash"""
-#ll = geohash64.LatLon(35.026131, 135.780673)
-#self.assertRaises(
-#  geohash64.OutOfRangeError,
-#  geohash64.encode, ll, precision=0)
-#
-#self.assertEqual(
-#  geohash64.encode(ll, precision=2),
-#  "3g")
-#
-#self.assertEqual(
-#  geohash64.encode(ll, precision=6),
-#  "3gLiVI")
-#
-#self.assertEqual(
-#  geohash64.encode(ll, precision=12),
-#  "3gLiVIlRVX_O")
-#
+  it 'hash', ->
+    ll = new geohash64.LatLon(35.026131, 135.780673)
+    ( -> geohash64.encode [ll], precision=0).should.throw()
+    geohash64.encode([ll], precision=2).should.be.eql '3g'
+
+#  self.assertEqual(
+#    geohash64.encode(ll, precision=6),
+#    "3gLiVI")
+
+#  self.assertEqual(
+#    geohash64.encode(ll, precision=12),
+#    "3gLiVIlRVX_O")
+
 #def test_decode(self):
 #"""hash->LatLon"""
 #precise_ll = geohash64.LatLon(35.026131, 135.780673)
