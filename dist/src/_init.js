@@ -2,54 +2,44 @@
 /*
   load with utf-8 encoding!!!!!!!!!!!!
  */
+var base64, bigint, float2int, geohash64, getGlobal, namespace, ns2, _;
 
-(function() {
-  var getGlobal, _global;
-
-  getGlobal = function() {
-    if (isNode) {
-      return global;
-    } else {
-      return window;
-    }
-  };
-
-  _global = getGlobal();
-
-  _global.getGlobal = getGlobal;
-
-  _global.isNode = isNode;
-
+getGlobal = function() {
   if (isNode) {
-    _global.bigint = require('bigint');
-    _global.base64 = require('base-64');
-    _global._ = require('lodash');
-    _global.ns2 = require('ns2');
-    _global.namespace = ns2.namespace;
+    return global;
+  } else {
+    return window;
   }
+};
 
-  namespace('geohash64');
+if (isNode) {
+  bigint = require('bigint');
+  base64 = require('base-64');
+  _ = require('lodash');
+  ns2 = require('ns2');
+  namespace = ns2.namespace;
+}
+
+namespace('geohash64');
 
 
-  /*
-   * base64url characters
-   */
+/*
+ * base64url characters
+ */
 
-  _global.geohash64 = (function() {
-    var codeMap, i, indexStr, _i, _ref;
-    indexStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-    codeMap = {};
-    for (i = _i = 0, _ref = indexStr.length; _i <= _ref; i = _i += 1) {
-      codeMap[indexStr[i]] = i;
-    }
-    return {
-      codeMap: codeMap,
-      indexStr: indexStr
-    };
-  })();
-
-  _global.float2int = function(value) {
-    return value | 0;
+geohash64 = (function() {
+  var codeMap, i, indexStr, _i, _ref;
+  indexStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+  codeMap = {};
+  for (i = _i = 0, _ref = indexStr.length; _i <= _ref; i = _i += 1) {
+    codeMap[indexStr[i]] = i;
+  }
+  return {
+    codeMap: codeMap,
+    indexStr: indexStr
   };
+})();
 
-}).call(this);
+float2int = function(value) {
+  return value | 0;
+};

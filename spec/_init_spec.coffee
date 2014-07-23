@@ -4,7 +4,7 @@ if isNode
   _ = require 'lodash'
   bigint = require 'bigint'
   base64 = require 'base-64'
-  project = require './index'
+  geohash64 = require './index'
 
 #deps be loaded by the browser or by node
 describe 'sanity', ->
@@ -24,4 +24,4 @@ describe 'sanity', ->
     throw new Error('ns2 is missing') if not base64
 
   it 'this project is loaded', ->
-    throw new Error ('THIS MAIN PROJECT IS NOT LOADED!') if not project
+    throw new Error ('THIS MAIN PROJECT IS NOT LOADED!') if not geohash64

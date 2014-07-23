@@ -1,5 +1,7 @@
 module.exports = (_, gulp, coffee, concat, rename, log, clean, gulpif, coffeelint, serve, ignore, es,
                   debug, help, ourUtils, replace, gzip, tar, insert, mocha, ourPackage, karma, open) ->
+  coffeeOptions =
+    bare: true
   date = new Date()
   header =
   """
@@ -30,7 +32,7 @@ module.exports = (_, gulp, coffee, concat, rename, log, clean, gulpif, coffeelin
     stripIsNode gulp.src(["node_modules/isnode/isnode.js"].concat(require './src_pipeline.json'), {base: "src"})
     .pipe gulpif(/[.]coffee$/,coffeelint())
     .pipe gulpif(/[.]coffee$/,coffeelint.reporter())
-    .pipe gulpif(/[.]coffee$/,coffee().on('error', log))
+    .pipe gulpif(/[.]coffee$/,coffee(coffeeOptions).on('error', log))
     .pipe(ourUtils.onlyDirs(es))
     .pipe(gulp.dest("dist/src"))
     .pipe(concat("index.js"))
@@ -45,7 +47,7 @@ module.exports = (_, gulp, coffee, concat, rename, log, clean, gulpif, coffeelin
     .pipe gulpif(/[.]js$/,replace('module.exports = ',''))
     .pipe gulpif(/[.]coffee$/,coffeelint())
     .pipe gulpif(/[.]coffee$/,coffeelint.reporter())
-    .pipe gulpif(/[.]coffee$/,coffee().on('error', log))
+    .pipe gulpif(/[.]coffee$/,coffee(coffeeOptions).on('error', log))
     .pipe(ourUtils.onlyDirs(es))
     .pipe(gulp.dest("dist/spec"))
     .pipe(concat("spec.js"))

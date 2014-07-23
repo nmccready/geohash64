@@ -25,3 +25,6 @@ geohash64.decode = (hash, doParseComma)->
 module.exports =
   encode: geohash64.encode
   decode: geohash64.decode
+  LatLon: geohash64.LatLon
+  Coordinate: geohash64.Coordinate
+  GeoHash64: geohash64.GeoHash64

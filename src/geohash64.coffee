@@ -1,7 +1,7 @@
 ###############################################################################
 # GeoHash64 Class
 ###############################################################################
-ns2.namespace 'geohash64'
+namespace 'geohash64'
 class geohash64.GeoHash64
   constructor: (hash, precision = 10) ->
     throw new Error 'Argument is invalid' unless _.isString hash
