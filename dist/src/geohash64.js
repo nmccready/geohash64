@@ -15,15 +15,17 @@ geohash64.GeoHash64 = (function() {
     }
     this.hash = hash;
     this.precision = this.hash.length;
+    this.south_west_ll = void 0;
+    this.center_ll = void 0;
     this.hash2geo();
   }
 
   GeoHash64.prototype.toString = function() {
-    return "geohash64.GeoHash64:\nhash: " + this.hash + ",\ncenter_ll: " + this.center_ll + ",\nsouth_west_ll: " + this.south_west_ll + ",\nerror: " + this.error + ",\ncoordinate_error: " + this.coordinate_error + ",\nprecision: " + this.precision + "\nhash2geo: " + hash2geo + "\nset_error: " + set_error;
+    return "geohash64.GeoHash64:\nhash: " + this.hash + ",\ncenter_ll: " + this.center_ll + ",\nsouth_west_ll: " + this.south_west_ll + ",\nerror: " + this.error + ",\ncoordinate_error: " + this.coordinate_error + ",\nprecision: " + this.precision;
   };
 
   GeoHash64.prototype.hash2geo = function() {
-    var decimal, decimal_list, lat, lon, s, _i, _ref;
+    var decimal, decimal_list, lat, lon, s, _i;
     decimal_list = [
       (function() {
         var _i, _len, _ref, _results;
@@ -38,7 +40,10 @@ geohash64.GeoHash64 = (function() {
     ];
     lat = 0.0;
     lon = 0.0;
-    for (decimal = _i = _ref = decimal_list.length - 1; _i >= 0; decimal = _i += -1) {
+    console.log(decimal_list);
+    for (_i = decimal_list.length - 1; _i >= 0; _i += -1) {
+      decimal = decimal_list[_i];
+      console.log("DECIMAL: " + decimal);
       lat += (decimal >> 3) & 4;
       lon += (decimal >> 2) & 4;
       lat += (decimal >> 2) & 2;
@@ -48,13 +53,15 @@ geohash64.GeoHash64 = (function() {
       lat /= 8;
       lon /= 8;
     }
-    this._ll = new geohash64.LatLon(lat * 180 - 90, lon * 360 - 180);
-    return this.set_error();
+    this.ll = new geohash64.LatLon(lat * 180 - 90, lon * 360 - 180);
+    this.set_error();
+    this.south_west_ll = this.ll;
+    return this.center_ll = this.ll.add(this.error);
   };
 
   GeoHash64.prototype.set_error = function() {
     this.error = new geohash64.LatLon(90.0 / Math.pow(8, this.precision), 180.0 / Math.pow(8, this.precision));
-    return this.coordinate_error = new geohash64.Coordinate(this._ll.distance_to(new geohash64.LatLon(this._ll.lat + this.error.lat, this._ll.lon)), this._ll.distance_to(new geohash64.LatLon(this._ll.lat, this._ll.lon + this.error.lon)));
+    return this.coordinate_error = new geohash64.Coordinate(this.ll.distance_to(new geohash64.LatLon(this.ll.lat + this.error.lat, this.ll.lon)), this.ll.distance_to(new geohash64.LatLon(this.ll.lat, this.ll.lon + this.error.lon)));
   };
 
   return GeoHash64;

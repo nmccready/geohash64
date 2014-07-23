@@ -14,9 +14,6 @@ class geohash64.LatLon
   toString: =>
     """geohash64.LatLon unit='degree'
     lat:#{@lat}, lon:#{@lon},
-    getGeoHash64: #{@getGeoHash64},
-    distance_to: #{@distance_to},
-    distance_from: #{@distance_from}
     """
 
   add: (ll) =>
@@ -28,10 +25,16 @@ class geohash64.LatLon
 
     lat = (@lat + 90) / 180  # => 0.69091
     lon = (@lon + 180) / 360  # => 0.22069
+#    lat = bigint(@lat.toString(),64).add(90).div(180)  # => 0.69091
+#    lon = bigint(@lat.toString(),64).add(180).div(360)  # => 0.22069
     hash = ''
 
-    for i in [0..precision]
+    for i in [0...precision] by 1
       do(i) ->
+#        lat = lat.mul(8)
+#        lon = lon.mul(8)
+#        lat_int = lat.toNumber()
+#        lon_int = lon.toNumber()
         lat *= 8
         lon *= 8
         lat_int = float2int(lat)

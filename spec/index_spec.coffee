@@ -16,7 +16,11 @@ describe 'LatLon', ->
   it 'hash', ->
     ll = new geohash64.LatLon(35.026131, 135.780673)
     ( -> geohash64.encode [ll], precision=0).should.throw()
-    geohash64.encode([ll], precision=2).should.be.eql '3g'
+    encoded = geohash64.encode([ll], precision=2)
+    console.log "WTF #{geohash64.decode(encoded)}"
+
+    encoded.should.be.eql '3g'
+
 
 #  self.assertEqual(
 #    geohash64.encode(ll, precision=6),

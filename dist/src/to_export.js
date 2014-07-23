@@ -26,12 +26,10 @@ geohash64.encode = function(latLonArray, precision) {
 };
 
 geohash64.decode = function(hash, doParseComma) {
-  var hashArray;
-  ({
-    _dcode: function(hash) {
-      return new GeoHash64(hash).center_ll;
-    }
-  });
+  var hashArray, _dcode;
+  _dcode = function(hash) {
+    return new geohash64.GeoHash64(hash).center_ll;
+  };
   if (!doParseComma) {
     return [_dcode(hash)];
   }

@@ -3,7 +3,7 @@
  *
  * @version: 0.0.0
  * @author: Nicholas McCready
- * @date: Tue Jul 22 2014 21:56:32 GMT-0400 (EDT)
+ * @date: Tue Jul 22 2014 23:25:17 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
@@ -78,7 +78,7 @@ geohash64.LatLon = (function() {
   }
 
   LatLon.prototype.toString = function() {
-    return "geohash64.LatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon + ",\ngetGeoHash64: " + this.getGeoHash64 + ",\ndistance_to: " + this.distance_to + ",\ndistance_from: " + this.distance_from;
+    return "geohash64.LatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon + ",";
   };
 
   LatLon.prototype.add = function(ll) {
@@ -110,7 +110,7 @@ geohash64.LatLon = (function() {
       +((lon_int << 0) & 1);
       return hash += geohash64.indexStr[index];
     };
-    for (i = _i = 0; 0 <= precision ? _i <= precision : _i >= precision; i = 0 <= precision ? ++_i : --_i) {
+    for (i = _i = 0; _i < precision; i = _i += 1) {
       _fn(i);
     }
     return new geohash64.GeoHash64(hash);
@@ -182,15 +182,17 @@ geohash64.GeoHash64 = (function() {
     }
     this.hash = hash;
     this.precision = this.hash.length;
+    this.south_west_ll = void 0;
+    this.center_ll = void 0;
     this.hash2geo();
   }
 
   GeoHash64.prototype.toString = function() {
-    return "geohash64.GeoHash64:\nhash: " + this.hash + ",\ncenter_ll: " + this.center_ll + ",\nsouth_west_ll: " + this.south_west_ll + ",\nerror: " + this.error + ",\ncoordinate_error: " + this.coordinate_error + ",\nprecision: " + this.precision + "\nhash2geo: " + hash2geo + "\nset_error: " + set_error;
+    return "geohash64.GeoHash64:\nhash: " + this.hash + ",\ncenter_ll: " + this.center_ll + ",\nsouth_west_ll: " + this.south_west_ll + ",\nerror: " + this.error + ",\ncoordinate_error: " + this.coordinate_error + ",\nprecision: " + this.precision;
   };
 
   GeoHash64.prototype.hash2geo = function() {
-    var decimal, decimal_list, lat, lon, s, _i, _ref;
+    var decimal, decimal_list, lat, lon, s, _i;
     decimal_list = [
       (function() {
         var _i, _len, _ref, _results;
@@ -205,7 +207,10 @@ geohash64.GeoHash64 = (function() {
     ];
     lat = 0.0;
     lon = 0.0;
-    for (decimal = _i = _ref = decimal_list.length - 1; _i >= 0; decimal = _i += -1) {
+    console.log(decimal_list);
+    for (_i = decimal_list.length - 1; _i >= 0; _i += -1) {
+      decimal = decimal_list[_i];
+      console.log("DECIMAL: " + decimal);
       lat += (decimal >> 3) & 4;
       lon += (decimal >> 2) & 4;
       lat += (decimal >> 2) & 2;
@@ -215,13 +220,15 @@ geohash64.GeoHash64 = (function() {
       lat /= 8;
       lon /= 8;
     }
-    this._ll = new geohash64.LatLon(lat * 180 - 90, lon * 360 - 180);
-    return this.set_error();
+    this.ll = new geohash64.LatLon(lat * 180 - 90, lon * 360 - 180);
+    this.set_error();
+    this.south_west_ll = this.ll;
+    return this.center_ll = this.ll.add(this.error);
   };
 
   GeoHash64.prototype.set_error = function() {
     this.error = new geohash64.LatLon(90.0 / Math.pow(8, this.precision), 180.0 / Math.pow(8, this.precision));
-    return this.coordinate_error = new geohash64.Coordinate(this._ll.distance_to(new geohash64.LatLon(this._ll.lat + this.error.lat, this._ll.lon)), this._ll.distance_to(new geohash64.LatLon(this._ll.lat, this._ll.lon + this.error.lon)));
+    return this.coordinate_error = new geohash64.Coordinate(this.ll.distance_to(new geohash64.LatLon(this.ll.lat + this.error.lat, this.ll.lon)), this.ll.distance_to(new geohash64.LatLon(this.ll.lat, this.ll.lon + this.error.lon)));
   };
 
   return GeoHash64;
@@ -256,12 +263,10 @@ geohash64.encode = function(latLonArray, precision) {
 };
 
 geohash64.decode = function(hash, doParseComma) {
-  var hashArray;
-  ({
-    _dcode: function(hash) {
-      return new GeoHash64(hash).center_ll;
-    }
-  });
+  var hashArray, _dcode;
+  _dcode = function(hash) {
+    return new geohash64.GeoHash64(hash).center_ll;
+  };
   if (!doParseComma) {
     return [_dcode(hash)];
   }

@@ -14,8 +14,8 @@ geohash64.encode = (latLonArray, precision = 10)->
   finalHash
 
 geohash64.decode = (hash, doParseComma)->
-  _dcode: (hash)->
-    new GeoHash64(hash).center_ll
+  _dcode = (hash)->
+    new geohash64.GeoHash64(hash).center_ll
   unless doParseComma
     return [_dcode hash]
   hashArray = hash.split(',')

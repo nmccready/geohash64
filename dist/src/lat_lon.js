@@ -20,7 +20,7 @@ geohash64.LatLon = (function() {
   }
 
   LatLon.prototype.toString = function() {
-    return "geohash64.LatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon + ",\ngetGeoHash64: " + this.getGeoHash64 + ",\ndistance_to: " + this.distance_to + ",\ndistance_from: " + this.distance_from;
+    return "geohash64.LatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon + ",";
   };
 
   LatLon.prototype.add = function(ll) {
@@ -52,7 +52,7 @@ geohash64.LatLon = (function() {
       +((lon_int << 0) & 1);
       return hash += geohash64.indexStr[index];
     };
-    for (i = _i = 0; 0 <= precision ? _i <= precision : _i >= precision; i = 0 <= precision ? ++_i : --_i) {
+    for (i = _i = 0; _i < precision; i = _i += 1) {
       _fn(i);
     }
     return new geohash64.GeoHash64(hash);
