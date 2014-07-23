@@ -1,4 +1,4 @@
-geodecoder64js
+geohash64
 ==============
 
 Project is attempt of porting [python-geohash64](https://code.google.com/p/python-geohash64/source/browse/trunk/geohash64.py) base64 geo encodings to nodejs.

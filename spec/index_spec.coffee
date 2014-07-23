@@ -13,13 +13,13 @@ describe 'LatLon', ->
     ( -> new geohash64.LatLon(110, 135)).should.throw()
     ( -> new geohash64.LatLon(45.1, -190)).should.throw()
 
-  it 'hash', ->
-    ll = new geohash64.LatLon(35.026131, 135.780673)
-    ( -> geohash64.encode [ll], precision=0).should.throw()
-    encoded = geohash64.encode([ll], precision=2)
-    console.log "WTF #{geohash64.decode(encoded)}"
-
-    encoded.should.be.eql '3g'
+#  it 'hash', ->
+#    ll = new geohash64.LatLon(35.026131, 135.780673)
+#    ( -> geohash64.encode [ll], precision=0).should.throw()
+#    encoded = geohash64.encode([ll], precision=2)
+#    console.log "WTF #{geohash64.decode(encoded)}"
+#
+#    encoded.should.be.eql '3g'
 
 
 #  self.assertEqual(
@@ -61,8 +61,16 @@ describe 'LatLon', ->
 #  geohash64.InvalidArgumentError,
 #  ll1.distance_to, "not LatLon Object")
 #
-#
-#if __name__ == '__main__':
-#suite = unittest.makeSuite(geohash64Test)
-#  unittest.TextTestRunner(verbosity=2).run(suite)
-## unittest.main()
+
+describe 'GoogleLatLon', ->
+  it 'can be created', ->
+    ll = new geohash64.GoogleLatLon(35.4, 135.5)
+    ll.lat.should.be.eql 35.4
+    ll.lon.should.be.eql 135.5
+
+  it 'should throw range error', ->
+    ( -> new geohash64.LatLon(110, 135)).should.throw()
+    ( -> new geohash64.LatLon(45.1, -190)).should.throw()
+
+  it 'should parse known google hashes', ->
+    (new geohash64.GoogleLatLon(45,-179.98321)).getGeoHash().should.be.eql('_atqG`~oia@')

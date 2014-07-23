@@ -3,7 +3,7 @@
  *
  * @version: 0.0.0
  * @author: Nicholas McCready
- * @date: Tue Jul 22 2014 23:25:17 GMT-0400 (EDT)
+ * @date: Wed Jul 23 2014 17:42:49 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
@@ -64,7 +64,7 @@ geohash64.LatLon = (function() {
   function LatLon(lat, lon) {
     this.distance_from = __bind(this.distance_from, this);
     this.distance_to = __bind(this.distance_to, this);
-    this.getGeoHash64 = __bind(this.getGeoHash64, this);
+    this.getGeoHash = __bind(this.getGeoHash, this);
     this.add = __bind(this.add, this);
     this.toString = __bind(this.toString, this);
     if (!(-90 <= lat && lat <= 90)) {
@@ -85,7 +85,7 @@ geohash64.LatLon = (function() {
     return new LatLon(this.lat + ll.lat, this.lon + ll.lon);
   };
 
-  LatLon.prototype.getGeoHash64 = function(precision) {
+  LatLon.prototype.getGeoHash = function(precision) {
     var hash, i, lat, lon, _fn, _i;
     if (precision == null) {
       precision = 10;
@@ -235,6 +235,163 @@ geohash64.GeoHash64 = (function() {
 
 })();
 
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+namespace('geohash64');
+
+geohash64.GoogleLatLon = (function(_super) {
+  var totalBits;
+
+  __extends(GoogleLatLon, _super);
+
+  function GoogleLatLon() {
+    this.getGeoHash = __bind(this.getGeoHash, this);
+    this.toString = __bind(this.toString, this);
+    return GoogleLatLon.__super__.constructor.apply(this, arguments);
+  }
+
+  totalBits = 30;
+
+  GoogleLatLon.prototype.toString = function() {
+    return "geohash64.GoogleLatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon + ",";
+  };
+
+  GoogleLatLon.prototype.maybeFlip = function(value) {
+    if (value < 0) {
+      return ~value;
+    }
+    return value;
+  };
+
+  GoogleLatLon.prototype.rounded = function(value) {
+    return Math.round(Math.pow(10, 5) * value);
+  };
+
+  GoogleLatLon.prototype.mask = 0x1F;
+
+  GoogleLatLon.prototype.len = totalBits;
+
+  GoogleLatLon.prototype.getGeoHash = function(set) {
+    var hash, increment;
+    if (!set) {
+      set = [this.lat, this.lon];
+    }
+    hash = '';
+    set = set.map((function(_this) {
+      return function(v) {
+        return _this.maybeFlip(_this.rounded(v) << 1);
+      };
+    })(this));
+
+    /*
+      working from https://developers.google.com/maps/documentation/utilities/polylinealgorithm
+      (((((maybeFlip((rounded)<< 1))>>0) <<25>>25) & 0x1F)|0x20) + 63 = 96
+      (((((maybeFlip((rounded)<< 1))>>5) <<20>>20) & 0x1F)|0x20) + 63 = 126
+      (((((maybeFlip((rounded)<< 1))>>10)<<15>>15) & 0x1F)|0x20) + 63 = 111
+      (((((maybeFlip((rounded)<< 1))>>15)<<10>>10) & 0x1F)|0x20) + 63 = 105
+      (((((maybeFlip((rounded)<< 1))>>10)<<20>>20) & 0x1F)|0x20) + 63 = 111
+      (((((maybeFlip((rounded)<< 1))>>20)  <<5>>5) & 0x1F)|0x20) + 63 = 97
+      (((((maybeFlip((rounded)<< 1))>>25)  <<0>>0) & 0x1F)) + 63 = 64 (final no 5 bit chunks left no OR of 0x20)
+     */
+    increment = 5;
+    console.log("set: " + set);
+    set.forEach((function(_this) {
+      return function(coord) {
+        var i, _i, _ref, _results;
+        console.log("Coord: " + coord);
+        _results = [];
+        for (i = _i = 0, _ref = _this.len; increment > 0 ? _i < _ref : _i > _ref; i = _i += increment) {
+          console.log("i: " + i);
+          _results.push((function(i) {
+            var index, toOr;
+            toOr = i + increment !== _this.len ? 0x20 : 0;
+            index = ((((coord >> i) << _this.len - i >> _this.len - i) & _this.mask) | toOr) + 63;
+            console.log(index);
+            return hash += String.fromCharCode(index);
+          })(i));
+        }
+        return _results;
+      };
+    })(this));
+    return hash;
+  };
+
+  return GoogleLatLon;
+
+})(geohash64.LatLon);
+
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+namespace('geohash64');
+
+geohash64.GoogleHash64 = (function() {
+  function GoogleHash64(hash, precision) {
+    if (precision == null) {
+      precision = 10;
+    }
+    this.set_error = __bind(this.set_error, this);
+    this.hash2geo = __bind(this.hash2geo, this);
+    this.toString = __bind(this.toString, this);
+    if (!_.isString(hash)) {
+      throw new Error('Argument is invalid');
+    }
+    this.hash = hash;
+    this.precision = this.hash.length;
+    this.south_west_ll = void 0;
+    this.center_ll = void 0;
+    this.hash2geo();
+  }
+
+  GoogleHash64.prototype.toString = function() {
+    return "geohash64.GeoHash64:\nhash: " + this.hash + ",\ncenter_ll: " + this.center_ll + ",";
+  };
+
+  GoogleHash64.prototype.hash2geo = function() {
+    var decimal, decimal_list, lat, lon, s, _i;
+    decimal_list = [
+      (function() {
+        var _i, _len, _ref, _results;
+        _ref = this.hash;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          s = _ref[_i];
+          _results.push(geohash64.codeMap[s]);
+        }
+        return _results;
+      }).call(this)
+    ];
+    lat = 0.0;
+    lon = 0.0;
+    console.log(decimal_list);
+    for (_i = decimal_list.length - 1; _i >= 0; _i += -1) {
+      decimal = decimal_list[_i];
+      console.log("DECIMAL: " + decimal);
+      lat += (decimal >> 3) & 4;
+      lon += (decimal >> 2) & 4;
+      lat += (decimal >> 2) & 2;
+      lon += (decimal >> 1) & 2;
+      lat += (decimal >> 1) & 1;
+      lon += (decimal >> 0) & 1;
+      lat /= 8;
+      lon /= 8;
+    }
+    this.ll = new geohash64.LatLon(lat * 180 - 90, lon * 360 - 180);
+    this.set_error();
+    this.south_west_ll = this.ll;
+    return this.center_ll = this.ll.add(this.error);
+  };
+
+  GoogleHash64.prototype.set_error = function() {
+    this.error = new geohash64.LatLon(90.0 / Math.pow(8, this.precision), 180.0 / Math.pow(8, this.precision));
+    return this.coordinate_error = new geohash64.Coordinate(this.ll.distance_to(new geohash64.LatLon(this.ll.lat + this.error.lat, this.ll.lon)), this.ll.distance_to(new geohash64.LatLon(this.ll.lat, this.ll.lon + this.error.lon)));
+  };
+
+  return GoogleHash64;
+
+})();
+
 namespace('geohash64');
 
 geohash64.encode = function(latLonArray, precision) {
@@ -281,5 +438,6 @@ module.exports = {
   decode: geohash64.decode,
   LatLon: geohash64.LatLon,
   Coordinate: geohash64.Coordinate,
-  GeoHash64: geohash64.GeoHash64
+  GeoHash64: geohash64.GeoHash64,
+  GoogleLatLon: geohash64.GoogleLatLon
 };

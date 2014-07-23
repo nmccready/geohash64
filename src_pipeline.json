@@ -3,5 +3,6 @@
   "src/lat_lon*",
   "src/coord*",
   "src/geo*",
+  "src/goog*",
   "src/to_export*"
 ]

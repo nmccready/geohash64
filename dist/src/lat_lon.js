@@ -6,7 +6,7 @@ geohash64.LatLon = (function() {
   function LatLon(lat, lon) {
     this.distance_from = __bind(this.distance_from, this);
     this.distance_to = __bind(this.distance_to, this);
-    this.getGeoHash64 = __bind(this.getGeoHash64, this);
+    this.getGeoHash = __bind(this.getGeoHash, this);
     this.add = __bind(this.add, this);
     this.toString = __bind(this.toString, this);
     if (!(-90 <= lat && lat <= 90)) {
@@ -27,7 +27,7 @@ geohash64.LatLon = (function() {
     return new LatLon(this.lat + ll.lat, this.lon + ll.lon);
   };
 
-  LatLon.prototype.getGeoHash64 = function(precision) {
+  LatLon.prototype.getGeoHash = function(precision) {
     var hash, i, lat, lon, _fn, _i;
     if (precision == null) {
       precision = 10;

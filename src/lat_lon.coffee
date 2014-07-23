@@ -19,7 +19,7 @@ class geohash64.LatLon
   add: (ll) =>
     new LatLon @lat + ll.lat, @lon + ll.lon
 
-  getGeoHash64:(precision=10) =>
+  getGeoHash:(precision=10) =>
     #"""LatLon => GeoHash64"""
     throw new Error('precision is out of range.') unless 0 < precision
 
