@@ -5,13 +5,10 @@ getGlobal = ->
   if isNode then global else window
 
 if isNode
-  bigint = require 'bigint'
-  base64 = require 'base-64'
   _ = require 'lodash'
   #  math = require 'math'
   ns2 = require 'ns2'
   namespace = ns2.namespace
-  utf8 = require 'utf8'
 
 namespace 'geohash64'
 ###

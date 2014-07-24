@@ -1,11 +1,9 @@
-var base64, bigint, geohash64, ns2, should, _;
+var geohash64, ns2, should, _;
 
 if (isNode) {
   ns2 = require('ns2');
   should = require('should');
   _ = require('lodash');
-  bigint = require('bigint');
-  base64 = require('base-64');
   geohash64 = require('./index');
 }
 
@@ -22,16 +20,6 @@ describe('sanity', function() {
   });
   it('ns2 is loaded', function() {
     if (!ns2) {
-      throw new Error('ns2 is missing');
-    }
-  });
-  it('bigint is loaded', function() {
-    if (!bigint) {
-      throw new Error('ns2 is missing');
-    }
-  });
-  it('base64 is loaded', function() {
-    if (!base64) {
       throw new Error('ns2 is missing');
     }
   });

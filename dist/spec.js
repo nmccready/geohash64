@@ -1,23 +1,21 @@
 /**
- *  geodecoder64js
+ *  geohash64js
  *
- * @version: 0.0.0
+ * @version: 1.0.0
  * @author: Nicholas McCready
- * @date: Thu Jul 24 2014 16:50:43 GMT-0400 (EDT)
+ * @date: Thu Jul 24 2014 16:57:12 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
   !(typeof window !== "undefined" && window !== null);
 
 
-var base64, bigint, geohash64, ns2, should, _;
+var geohash64, ns2, should, _;
 
 if (isNode) {
   ns2 = require('ns2');
   should = require('should');
   _ = require('lodash');
-  bigint = require('bigint');
-  base64 = require('base-64');
   geohash64 = require('./index');
 }
 
@@ -34,16 +32,6 @@ describe('sanity', function() {
   });
   it('ns2 is loaded', function() {
     if (!ns2) {
-      throw new Error('ns2 is missing');
-    }
-  });
-  it('bigint is loaded', function() {
-    if (!bigint) {
-      throw new Error('ns2 is missing');
-    }
-  });
-  it('base64 is loaded', function() {
-    if (!base64) {
       throw new Error('ns2 is missing');
     }
   });

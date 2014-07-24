@@ -1,9 +1,9 @@
 /**
- *  geodecoder64js
+ *  geohash64js
  *
- * @version: 0.0.0
+ * @version: 1.0.0
  * @author: Nicholas McCready
- * @date: Thu Jul 24 2014 16:50:43 GMT-0400 (EDT)
+ * @date: Thu Jul 24 2014 16:57:12 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
@@ -14,7 +14,7 @@ isNode =
 /*
   load with utf-8 encoding!!!!!!!!!!!!
  */
-var base64, bigint, float2int, geohash64, getGlobal, namespace, ns2, utf8, _;
+var float2int, geohash64, getGlobal, namespace, ns2, _;
 
 getGlobal = function() {
   if (isNode) {
@@ -25,12 +25,9 @@ getGlobal = function() {
 };
 
 if (isNode) {
-  bigint = require('bigint');
-  base64 = require('base-64');
   _ = require('lodash');
   ns2 = require('ns2');
   namespace = ns2.namespace;
-  utf8 = require('utf8');
 }
 
 namespace('geohash64');
