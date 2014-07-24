@@ -34,17 +34,21 @@ geohash64.encode = function(latLonArray, precision, encoder) {
   return finalHash;
 };
 
-geohash64.decode = function(hash, doParseComma) {
-  var hashArray, _dcode;
-  _dcode = function(hash) {
-    return new geohash64.GeoHash64(hash).center_ll;
-  };
-  if (!doParseComma) {
-    return [_dcode(hash)];
+geohash64.decode = function(hash, doConvertToLatLonArrayOfArray, decoder, type) {
+  var doReturnPoints, hasher, points;
+  if (decoder == null) {
+    decoder = geohash64.GoogleHash64;
   }
-  hashArray = hash.split(',');
-  return hashArray.map(function(hash) {
-    return _dcode(hash);
+  if (type == null) {
+    type = 'geohash64.GoogleHash64';
+  }
+  hasher = new decoder(hash, true);
+  points = hasher.hash2geo(doReturnPoints = true);
+  if (!doConvertToLatLonArrayOfArray) {
+    return points;
+  }
+  return points.map(function(latLon) {
+    return [latLon.lat, latLon.lon];
   });
 };
 

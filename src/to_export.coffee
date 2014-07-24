@@ -18,14 +18,12 @@ geohash64.encode = (latLonArray, precision = 5, encoder = geohash64.GoogleLatLon
     finalHash += ll.getGeoHash(precision).hash
   finalHash
 
-geohash64.decode = (hash, doParseComma)->
-  _dcode = (hash)->
-    new geohash64.GeoHash64(hash).center_ll
-  unless doParseComma
-    return [_dcode hash]
-  hashArray = hash.split(',')
-  hashArray.map (hash) ->
-    _dcode hash
+geohash64.decode = (hash, doConvertToLatLonArrayOfArray, decoder = geohash64.GoogleHash64, type = 'geohash64.GoogleHash64')->
+  hasher = new decoder(hash,true)
+  points = hasher.hash2geo(doReturnPoints = true)
+  return points if not doConvertToLatLonArrayOfArray
+  points.map (latLon) ->
+    [latLon.lat,latLon.lon]
 
 module.exports =
   encode: geohash64.encode

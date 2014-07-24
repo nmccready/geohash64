@@ -21,9 +21,12 @@ describe('LatLon', function() {
 });
 
 describe('GoogleLatLon', function() {
-  var manyHashes, manyPoints;
+  var fullHash, manyHashes, manyPoints;
   manyPoints = [[38.5, -120.2], [45, -179.98321], [40.7, -120.95], [43.252, -126.453]];
   manyHashes = ['_p~iF~ps|U', '_atqG`~oia@', '_flwFn`faV', '_t~fGfzxbW'];
+  fullHash = manyHashes.reduce(function(prev, current) {
+    return prev + current;
+  });
   it('can be created', function() {
     var ll;
     ll = new geohash64.GoogleLatLon(35.4, 135.5);
@@ -52,16 +55,14 @@ describe('GoogleLatLon', function() {
         });
       });
     });
-    return describe('via encoder method', function() {
+    return describe('via encode method', function() {
       return it(manyPoints, function() {
-        return geohash64.encode(manyPoints).should.eql(manyHashes.reduce(function(prev, current) {
-          return prev + current;
-        }));
+        return geohash64.encode(manyPoints).should.eql(fullHash);
       });
     });
   });
   return describe('decode', function() {
-    return describe('known google hashes', function() {
+    describe('known google hashes', function() {
       return manyPoints.forEach(function(point, i) {
         return it(point, function() {
           return new geohash64.GoogleHash64(manyHashes[i]).center_ll.toEqual((function(func, args, ctor) {
@@ -70,6 +71,11 @@ describe('GoogleLatLon', function() {
             return Object(result) === result ? result : child;
           })(geohash64.GoogleLatLon, point, function(){})).should.be.ok;
         });
+      });
+    });
+    return describe('via decode method', function() {
+      return it("" + fullHash + " to " + manyPoints, function() {
+        return geohash64.decode(fullHash, true).should.eql(manyPoints);
       });
     });
   });

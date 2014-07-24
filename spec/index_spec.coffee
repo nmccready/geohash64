@@ -10,8 +10,10 @@ describe 'LatLon', ->
     ll.lon.should.be.eql 135.5
 
   it 'should throw range error', ->
-    ( -> new geohash64.LatLon(110, 135)).should.throw()
-    ( -> new geohash64.LatLon(45.1, -190)).should.throw()
+    ( ->
+      new geohash64.LatLon(110, 135)).should.throw()
+    ( ->
+      new geohash64.LatLon(45.1, -190)).should.throw()
 
 #  it 'hash', ->
 #    ll = new geohash64.LatLon(35.026131, 135.780673)
@@ -63,32 +65,43 @@ describe 'LatLon', ->
 #
 
 describe 'GoogleLatLon', ->
-  manyPoints = [[38.5,-120.2],[45,-179.98321],[40.7,-120.95],[43.252,-126.453]]
-  manyHashes = ['_p~iF~ps|U','_atqG`~oia@','_flwFn`faV','_t~fGfzxbW']
-  #website states _ulLnnqC, but using their encoding tool it is not right, the below test is what it should be
-  #again website is incorrect states answer is _mqNvxq`@ ... wrong!
+  manyPoints = [
+    [38.5, -120.2],
+    [45, -179.98321],
+    [40.7, -120.95],
+    [43.252, -126.453]
+  ]
+  manyHashes = ['_p~iF~ps|U', '_atqG`~oia@', '_flwFn`faV', '_t~fGfzxbW']
+  fullHash = manyHashes.reduce((prev, current) ->
+    prev + current)
+  #website states[2] _ulLnnqC, but using their encoding tool it is not right, the below test is what it should be
+  #again website [3] is incorrect states answer is _mqNvxq`@ ... wrong!
   it 'can be created', ->
     ll = new geohash64.GoogleLatLon(35.4, 135.5)
     ll.lat.should.be.eql 35.4
     ll.lon.should.be.eql 135.5
 
   it 'should throw range error', ->
-    ( -> new geohash64.LatLon(110, 135)).should.throw()
-    ( -> new geohash64.LatLon(45.1, -190)).should.throw()
+    ( ->
+      new geohash64.LatLon(110, 135)).should.throw()
+    ( ->
+      new geohash64.LatLon(45.1, -190)).should.throw()
 
   describe 'encode', ->
     describe 'via LatLon Object', ->
       describe 'known google hashes', ->
-        manyPoints.forEach (point,i) ->
+        manyPoints.forEach (point, i) ->
           it point, ->
             (new geohash64.GoogleLatLon(point...)).getGeoHash().hash.should.be.eql(manyHashes[i])
-
-    describe 'via encoder method', ->
+    describe 'via encode method', ->
       it manyPoints, ->
-        geohash64.encode(manyPoints).should.eql manyHashes.reduce((prev,current) -> prev + current)
+        geohash64.encode(manyPoints).should.eql fullHash
 
   describe 'decode', ->
     describe 'known google hashes', ->
-      manyPoints.forEach (point,i) ->
+      manyPoints.forEach (point, i) ->
         it point, ->
           new geohash64.GoogleHash64(manyHashes[i]).center_ll.toEqual(new geohash64.GoogleLatLon(point...)).should.be.ok
+    describe 'via decode method', ->
+      it "#{fullHash} to #{manyPoints}", ->
+        geohash64.decode(fullHash,true).should.eql manyPoints

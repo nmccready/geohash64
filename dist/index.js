@@ -3,7 +3,7 @@
  *
  * @version: 0.0.0
  * @author: Nicholas McCready
- * @date: Thu Jul 24 2014 16:18:34 GMT-0400 (EDT)
+ * @date: Thu Jul 24 2014 16:30:18 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
@@ -319,8 +319,10 @@ geohash64.GoogleHash64 = (function() {
           prev_y += coords[i + 1];
           prev_x += coords[i];
           _this.center_ll = _this.tuple(_this.round(prev_x), _this.round(prev_y));
-          return points.push(_this.center_ll);
+          points.push(_this.center_ll);
         }
+        prev_x = 0;
+        return prev_y = 0;
       };
     })(this);
     for (i = _i = 0, _ref = coords.length; _i < _ref; i = _i += 2) {
@@ -469,17 +471,21 @@ geohash64.encode = function(latLonArray, precision, encoder) {
   return finalHash;
 };
 
-geohash64.decode = function(hash, doParseComma) {
-  var hashArray, _dcode;
-  _dcode = function(hash) {
-    return new geohash64.GeoHash64(hash).center_ll;
-  };
-  if (!doParseComma) {
-    return [_dcode(hash)];
+geohash64.decode = function(hash, doConvertToLatLonArrayOfArray, decoder, type) {
+  var doReturnPoints, hasher, points;
+  if (decoder == null) {
+    decoder = geohash64.GoogleHash64;
   }
-  hashArray = hash.split(',');
-  return hashArray.map(function(hash) {
-    return _dcode(hash);
+  if (type == null) {
+    type = 'geohash64.GoogleHash64';
+  }
+  hasher = new decoder(hash, true);
+  points = hasher.hash2geo(doReturnPoints = true);
+  if (!doConvertToLatLonArrayOfArray) {
+    return points;
+  }
+  return points.map(function(latLon) {
+    return [latLon.lat, latLon.lon];
   });
 };
 
