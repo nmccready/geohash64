@@ -3,7 +3,7 @@
 ###############################################################################
 namespace 'geohash64'
 class geohash64.GoogleHash64
-  constructor: (@hash, @center_ll, @precision = 5) ->
+  constructor: (@hash, @center_ll, @precision = 6) ->
     throw new Error 'Argument is invalid' unless _.isString @hash
     @hash2geo() unless @center_ll
 
@@ -13,15 +13,15 @@ class geohash64.GoogleHash64
 
   ord: (str) ->
     str.charCodeAt(0)
-  round: (value,precision) ->
-    value.toFixed(precision)
+  round: (value) ->
+    value.toFixed(@precision)
 
   tuple: (left,right) ->
 #    console.log "left: #{left}, right:#{right}"
     new geohash64.GoogleLatLon(left,right)
   mask: 0x1F #5bits
   #ported https://gist.github.com/signed0/2031157, thanks!
-  hash2geo: =>
+  hash2geo:(doReturnPoints = false) =>
     point_str = @hash
     '''Decodes a polyline that has been encoded using Google's algorithm
     http://code.google.com/apis/maps/documentation/polylinealgorithm.html
@@ -82,8 +82,9 @@ class geohash64.GoogleHash64
           prev_x += coords[i]
           # a round to 6 digits ensures that the floats are the same as when
           # they were encoded
-          @center_ll = @tuple @round(prev_x, 6), @round(prev_y, 6)
+          @center_ll = @tuple @round(prev_x), @round(prev_y)
 #          console.log "center_ll: #{@center_ll.toString()}"
           points.push @center_ll
 
-    return points
+    return points if doReturnPoints
+    return @center_ll #conform to python geohash api

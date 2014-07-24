@@ -3,7 +3,7 @@
  *
  * @version: 0.0.0
  * @author: Nicholas McCready
- * @date: Thu Jul 24 2014 15:21:28 GMT-0400 (EDT)
+ * @date: Thu Jul 24 2014 16:18:34 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
@@ -173,7 +173,7 @@ namespace('geohash64');
 geohash64.GeoHash64 = (function() {
   function GeoHash64(hash, precision) {
     if (precision == null) {
-      precision = 10;
+      precision = 5;
     }
     this.set_error = __bind(this.set_error, this);
     this.hash2geo = __bind(this.hash2geo, this);
@@ -244,7 +244,7 @@ geohash64.GoogleHash64 = (function() {
   function GoogleHash64(hash, center_ll, precision) {
     this.hash = hash;
     this.center_ll = center_ll;
-    this.precision = precision != null ? precision : 5;
+    this.precision = precision != null ? precision : 6;
     this.hash2geo = __bind(this.hash2geo, this);
     this.toString = __bind(this.toString, this);
     if (!_.isString(this.hash)) {
@@ -263,8 +263,8 @@ geohash64.GoogleHash64 = (function() {
     return str.charCodeAt(0);
   };
 
-  GoogleHash64.prototype.round = function(value, precision) {
-    return value.toFixed(precision);
+  GoogleHash64.prototype.round = function(value) {
+    return value.toFixed(this.precision);
   };
 
   GoogleHash64.prototype.tuple = function(left, right) {
@@ -273,8 +273,11 @@ geohash64.GoogleHash64 = (function() {
 
   GoogleHash64.prototype.mask = 0x1F;
 
-  GoogleHash64.prototype.hash2geo = function() {
+  GoogleHash64.prototype.hash2geo = function(doReturnPoints) {
     var chunkSet, coord_chunks, coords, i, point_str, points, prev_x, prev_y, _fn, _i, _ref;
+    if (doReturnPoints == null) {
+      doReturnPoints = false;
+    }
     point_str = this.hash;
     'Decodes a polyline that has been encoded using Google\'s algorithm\nhttp://code.google.com/apis/maps/documentation/polylinealgorithm.html\n\nThis is a generic method that returns a list of (latitude, longitude)\ntuples.\n\n:param point_str: Encoded polyline string.\n:type point_str: string\n:returns: List of 2-tuples where each tuple is (latitude, longitude)\n:rtype: list\n';
     coord_chunks = [[]];
@@ -315,7 +318,7 @@ geohash64.GoogleHash64 = (function() {
         if (!(coords[i] === 0 && coords[i + 1] === 0)) {
           prev_y += coords[i + 1];
           prev_x += coords[i];
-          _this.center_ll = _this.tuple(_this.round(prev_x, 6), _this.round(prev_y, 6));
+          _this.center_ll = _this.tuple(_this.round(prev_x), _this.round(prev_y));
           return points.push(_this.center_ll);
         }
       };
@@ -323,7 +326,10 @@ geohash64.GoogleHash64 = (function() {
     for (i = _i = 0, _ref = coords.length; _i < _ref; i = _i += 2) {
       _fn(i);
     }
-    return points;
+    if (doReturnPoints) {
+      return points;
+    }
+    return this.center_ll;
   };
 
   return GoogleHash64;
@@ -400,7 +406,7 @@ geohash64.GoogleLatLon = (function(_super) {
     return chunks;
   };
 
-  GoogleLatLon.prototype.getGeoHash = function(set) {
+  GoogleLatLon.prototype.getGeoHash = function(precision, set) {
     var hash;
     if (!set) {
       set = [this.lat, this.lon];
@@ -429,27 +435,36 @@ geohash64.GoogleLatLon = (function(_super) {
 
 namespace('geohash64');
 
-geohash64.encode = function(latLonArray, precision) {
-  var allAreValid, ctr, finalHash;
+
+/*
+  encode:
+  arguments:
+    latLonArray: an array or latLon(Array Objects) - ie: [[36,140.0]], where lat = 36, and lon = 140
+    (precision): number of decimal place accuracy
+    (encoder): a LatLon object type to use as the encoding object
+ */
+
+geohash64.encode = function(latLonArray, precision, encoder) {
+  var allAreValid, finalHash;
   if (precision == null) {
-    precision = 10;
+    precision = 5;
+  }
+  if (encoder == null) {
+    encoder = geohash64.GoogleLatLon;
   }
   if (!(latLonArray != null ? latLonArray.length : void 0)) {
     throw new Error('One location pair must exist');
   }
   allAreValid = _.all(latLonArray, function(latLon) {
-    return ((latLon != null ? latLon.getGeoHash64 : void 0) != null) && (latLon.lat != null) && (latLon.lon != null);
+    return latLon.length === 2;
   });
   if (!allAreValid) {
     throw new Error('All lat/lon objects are valid');
   }
   finalHash = '';
-  ctr = 0;
   latLonArray.forEach(function(ll) {
-    var append;
-    append = ctr > 0 ? ',' : '';
-    finalHash = ll.getGeoHash64(precision).hash + append;
-    return ctr += 1;
+    ll = new encoder(ll[0], ll[1]);
+    return finalHash += ll.getGeoHash(precision).hash;
   });
   return finalHash;
 };

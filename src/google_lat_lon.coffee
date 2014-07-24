@@ -44,7 +44,7 @@ class geohash64.GoogleLatLon extends geohash64.LatLon
     chunks.push value
     chunks
 
-  getGeoHash: (set) =>
+  getGeoHash: (precision,set) =>
     if !set
       set = [@lat, @lon]
     hash = ''

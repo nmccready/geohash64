@@ -1,16 +1,21 @@
 namespace 'geohash64'
-geohash64.encode = (latLonArray, precision = 10)->
+###
+  encode:
+  arguments:
+    latLonArray: an array or latLon(Array Objects) - ie: [[36,140.0]], where lat = 36, and lon = 140
+    (precision): number of decimal place accuracy
+    (encoder): a LatLon object type to use as the encoding object
+###
+geohash64.encode = (latLonArray, precision = 5, encoder = geohash64.GoogleLatLon)->
 #  console.log "latLonArray: #{latLonArray}"
   throw new Error('One location pair must exist') unless latLonArray?.length
   allAreValid = _.all latLonArray, (latLon) ->
-    latLon?.getGeoHash64? and latLon.lat? and latLon.lon?
+    latLon.length == 2
   throw new Error('All lat/lon objects are valid') unless allAreValid
   finalHash = ''
-  ctr = 0
   latLonArray.forEach (ll) ->
-    append = if ctr > 0 then ',' else ''
-    finalHash = ll.getGeoHash64(precision).hash + append
-    ctr += 1
+    ll = new encoder(ll[0],ll[1])
+    finalHash += ll.getGeoHash(precision).hash
   finalHash
 
 geohash64.decode = (hash, doParseComma)->

@@ -68,7 +68,7 @@ geohash64.GoogleLatLon = (function(_super) {
     return chunks;
   };
 
-  GoogleLatLon.prototype.getGeoHash = function(set) {
+  GoogleLatLon.prototype.getGeoHash = function(precision, set) {
     var hash;
     if (!set) {
       set = [this.lat, this.lon];

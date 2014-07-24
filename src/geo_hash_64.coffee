@@ -3,7 +3,7 @@
 ###############################################################################
 namespace 'geohash64'
 class geohash64.GeoHash64
-  constructor: (hash, precision = 10) ->
+  constructor: (hash, precision = 5) ->
     throw new Error 'Argument is invalid' unless _.isString hash
     @hash = hash
     @precision = @hash.length
