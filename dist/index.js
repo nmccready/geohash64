@@ -3,7 +3,7 @@
  *
  * @version: 0.0.0
  * @author: Nicholas McCready
- * @date: Thu Jul 24 2014 12:46:41 GMT-0400 (EDT)
+ * @date: Thu Jul 24 2014 15:21:28 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
@@ -236,6 +236,100 @@ geohash64.GeoHash64 = (function() {
 
 })();
 
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+namespace('geohash64');
+
+geohash64.GoogleHash64 = (function() {
+  function GoogleHash64(hash, center_ll, precision) {
+    this.hash = hash;
+    this.center_ll = center_ll;
+    this.precision = precision != null ? precision : 5;
+    this.hash2geo = __bind(this.hash2geo, this);
+    this.toString = __bind(this.toString, this);
+    if (!_.isString(this.hash)) {
+      throw new Error('Argument is invalid');
+    }
+    if (!this.center_ll) {
+      this.hash2geo();
+    }
+  }
+
+  GoogleHash64.prototype.toString = function() {
+    return "geohash64.GoogleHash64:\nhash: " + this.hash + ",center_ll: " + this.center_ll;
+  };
+
+  GoogleHash64.prototype.ord = function(str) {
+    return str.charCodeAt(0);
+  };
+
+  GoogleHash64.prototype.round = function(value, precision) {
+    return value.toFixed(precision);
+  };
+
+  GoogleHash64.prototype.tuple = function(left, right) {
+    return new geohash64.GoogleLatLon(left, right);
+  };
+
+  GoogleHash64.prototype.mask = 0x1F;
+
+  GoogleHash64.prototype.hash2geo = function() {
+    var chunkSet, coord_chunks, coords, i, point_str, points, prev_x, prev_y, _fn, _i, _ref;
+    point_str = this.hash;
+    'Decodes a polyline that has been encoded using Google\'s algorithm\nhttp://code.google.com/apis/maps/documentation/polylinealgorithm.html\n\nThis is a generic method that returns a list of (latitude, longitude)\ntuples.\n\n:param point_str: Encoded polyline string.\n:type point_str: string\n:returns: List of 2-tuples where each tuple is (latitude, longitude)\n:rtype: list\n';
+    coord_chunks = [[]];
+    chunkSet = 0;
+    _(point_str).each((function(_this) {
+      return function(char) {
+        var split_after, value;
+        value = _this.ord(char) - 63;
+        split_after = !(value & 0x20);
+        value &= _this.mask;
+        coord_chunks[chunkSet].push(value);
+        if (split_after) {
+          chunkSet += 1;
+          return coord_chunks.push([]);
+        }
+      };
+    })(this));
+    coord_chunks.pop();
+    coord_chunks.forEach(function(chunk, key) {});
+    coords = coord_chunks.map(function(coord_chunk) {
+      var coord;
+      coord = 0;
+      coord_chunk.forEach(function(chunk, i) {
+        return coord |= chunk << (i * 5);
+      });
+      if (coord & 0x1) {
+        coord = ~coord;
+      }
+      coord >>= 1;
+      coord /= 100000.0;
+      return coord;
+    });
+    points = [];
+    prev_x = 0;
+    prev_y = 0;
+    _fn = (function(_this) {
+      return function(i) {
+        if (!(coords[i] === 0 && coords[i + 1] === 0)) {
+          prev_y += coords[i + 1];
+          prev_x += coords[i];
+          _this.center_ll = _this.tuple(_this.round(prev_x, 6), _this.round(prev_y, 6));
+          return points.push(_this.center_ll);
+        }
+      };
+    })(this);
+    for (i = _i = 0, _ref = coords.length; _i < _ref; i = _i += 2) {
+      _fn(i);
+    }
+    return points;
+  };
+
+  return GoogleHash64;
+
+})();
+
 
 /*
   GoogleLatLon Class
@@ -263,12 +357,17 @@ geohash64.GoogleLatLon = (function(_super) {
 
   function GoogleLatLon() {
     this.getGeoHash = __bind(this.getGeoHash, this);
+    this.toEqual = __bind(this.toEqual, this);
     this.toString = __bind(this.toString, this);
     return GoogleLatLon.__super__.constructor.apply(this, arguments);
   }
 
   GoogleLatLon.prototype.toString = function() {
-    return "geohash64.GoogleLatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon + ",";
+    return "geohash64.GoogleLatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon;
+  };
+
+  GoogleLatLon.prototype.toEqual = function(other) {
+    return other.lat === this.lat && other.lon === this.lon;
   };
 
   GoogleLatLon.prototype.maybeFlip = function(value) {
@@ -321,82 +420,12 @@ geohash64.GoogleLatLon = (function(_super) {
         });
       };
     })(this));
-    return hash;
+    return new geohash64.GoogleHash64(hash, this);
   };
 
   return GoogleLatLon;
 
 })(geohash64.LatLon);
-
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
-namespace('geohash64');
-
-geohash64.GoogleHash64 = (function() {
-  function GoogleHash64(hash, precision) {
-    if (precision == null) {
-      precision = 10;
-    }
-    this.set_error = __bind(this.set_error, this);
-    this.hash2geo = __bind(this.hash2geo, this);
-    this.toString = __bind(this.toString, this);
-    if (!_.isString(hash)) {
-      throw new Error('Argument is invalid');
-    }
-    this.hash = hash;
-    this.precision = this.hash.length;
-    this.south_west_ll = void 0;
-    this.center_ll = void 0;
-    this.hash2geo();
-  }
-
-  GoogleHash64.prototype.toString = function() {
-    return "geohash64.GeoHash64:\nhash: " + this.hash + ",\ncenter_ll: " + this.center_ll + ",";
-  };
-
-  GoogleHash64.prototype.hash2geo = function() {
-    var decimal, decimal_list, lat, lon, s, _i;
-    decimal_list = [
-      (function() {
-        var _i, _len, _ref, _results;
-        _ref = this.hash;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          s = _ref[_i];
-          _results.push(geohash64.codeMap[s]);
-        }
-        return _results;
-      }).call(this)
-    ];
-    lat = 0.0;
-    lon = 0.0;
-    console.log(decimal_list);
-    for (_i = decimal_list.length - 1; _i >= 0; _i += -1) {
-      decimal = decimal_list[_i];
-      console.log("DECIMAL: " + decimal);
-      lat += (decimal >> 3) & 4;
-      lon += (decimal >> 2) & 4;
-      lat += (decimal >> 2) & 2;
-      lon += (decimal >> 1) & 2;
-      lat += (decimal >> 1) & 1;
-      lon += (decimal >> 0) & 1;
-      lat /= 8;
-      lon /= 8;
-    }
-    this.ll = new geohash64.LatLon(lat * 180 - 90, lon * 360 - 180);
-    this.set_error();
-    this.south_west_ll = this.ll;
-    return this.center_ll = this.ll.add(this.error);
-  };
-
-  GoogleHash64.prototype.set_error = function() {
-    this.error = new geohash64.LatLon(90.0 / Math.pow(8, this.precision), 180.0 / Math.pow(8, this.precision));
-    return this.coordinate_error = new geohash64.Coordinate(this.ll.distance_to(new geohash64.LatLon(this.ll.lat + this.error.lat, this.ll.lon)), this.ll.distance_to(new geohash64.LatLon(this.ll.lat, this.ll.lon + this.error.lon)));
-  };
-
-  return GoogleHash64;
-
-})();
 
 namespace('geohash64');
 
@@ -445,5 +474,6 @@ module.exports = {
   LatLon: geohash64.LatLon,
   Coordinate: geohash64.Coordinate,
   GeoHash64: geohash64.GeoHash64,
-  GoogleLatLon: geohash64.GoogleLatLon
+  GoogleLatLon: geohash64.GoogleLatLon,
+  GoogleHash64: geohash64.GoogleHash64
 };

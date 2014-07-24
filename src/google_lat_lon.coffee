@@ -17,8 +17,11 @@ namespace 'geohash64'
 class geohash64.GoogleLatLon extends geohash64.LatLon
   toString: =>
     """geohash64.GoogleLatLon unit='degree'
-    lat:#{@lat}, lon:#{@lon},
+    lat:#{@lat}, lon:#{@lon}
     """
+  toEqual: (other) =>
+    other.lat == @lat and other.lon == @lon
+
   maybeFlip: (value) ->
     if value < 0
       return ~value
@@ -55,12 +58,10 @@ class geohash64.GoogleLatLon extends geohash64.LatLon
       #Step 5 - 8
       chunks = @getChunks value
       # Step 9-10
-      chunks.forEach (c) =>
+      chunks.forEach (c) ->
         asciiIndex = c + 63
 #        console.log "asciiIndex: #{asciiIndex}"
         hashToAdd =  String.fromCharCode asciiIndex
 #        console.log "hashToAdd: #{hashToAdd}"
         hash += hashToAdd
-
-#    return new geohash64.GeoHash64(hash)
-    return hash
+    return new geohash64.GoogleHash64(hash,@) #pass @ to not have to decode

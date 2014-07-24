@@ -72,14 +72,26 @@ describe 'GoogleLatLon', ->
     ( -> new geohash64.LatLon(110, 135)).should.throw()
     ( -> new geohash64.LatLon(45.1, -190)).should.throw()
 
-  describe 'should parse known google hashes', ->
-    it '38.5,-120.2', ->
-      (new geohash64.GoogleLatLon(38.5,-120.2)).getGeoHash().should.be.eql('_p~iF~ps|U')
-    it '45,-179.98321', ->
-      (new geohash64.GoogleLatLon(45,-179.98321)).getGeoHash().should.be.eql('_atqG`~oia@')
-    it '40.7,-120.95', ->
-      #website states _ulLnnqC, but using their encoding tool it is not right, the below test is what it should be
-      (new geohash64.GoogleLatLon(40.7,-120.95)).getGeoHash().should.be.eql('_flwFn`faV')
-    it '43.252,-126.453', ->
-      #again website is incorrect states answer is _mqNvxq`@ ... wrong!
-      (new geohash64.GoogleLatLon(43.252,-126.453)).getGeoHash().should.be.eql('_t~fGfzxbW')
+  describe 'encode', ->
+    describe 'known google hashes', ->
+      it '38.5,-120.2', ->
+        (new geohash64.GoogleLatLon(38.5,-120.2)).getGeoHash().hash.should.be.eql('_p~iF~ps|U')
+      it '45,-179.98321', ->
+        (new geohash64.GoogleLatLon(45,-179.98321)).getGeoHash().hash.should.be.eql('_atqG`~oia@')
+      it '40.7,-120.95', ->
+        #website states _ulLnnqC, but using their encoding tool it is not right, the below test is what it should be
+        (new geohash64.GoogleLatLon(40.7,-120.95)).getGeoHash().hash.should.be.eql('_flwFn`faV')
+      it '43.252,-126.453', ->
+        #again website is incorrect states answer is _mqNvxq`@ ... wrong!
+        (new geohash64.GoogleLatLon(43.252,-126.453)).getGeoHash().hash.should.be.eql('_t~fGfzxbW')
+
+  describe 'decode', ->
+    describe 'known google hashes', ->
+      it '38.5,-120.2', ->
+        new geohash64.GoogleHash64('_p~iF~ps|U').center_ll.toEqual(new geohash64.GoogleLatLon(38.5,-120.2)).should.be.ok
+      it '45,-179.98321', ->
+        new geohash64.GoogleHash64('_atqG`~oia@').center_ll.toEqual(new geohash64.GoogleLatLon(45,-179.98321)).should.be.ok
+      it '40.7,-120.95', ->
+        new geohash64.GoogleHash64('_flwFn`faV').center_ll.toEqual(new geohash64.GoogleLatLon(40.7,-120.95)).should.be.ok
+      it '43.252,-126.453', ->
+        new geohash64.GoogleHash64('_t~fGfzxbW').center_ll.toEqual(new geohash64.GoogleLatLon(43.252,-126.453)).should.be.ok

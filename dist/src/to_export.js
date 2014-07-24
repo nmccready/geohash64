@@ -45,5 +45,6 @@ module.exports = {
   LatLon: geohash64.LatLon,
   Coordinate: geohash64.Coordinate,
   GeoHash64: geohash64.GeoHash64,
-  GoogleLatLon: geohash64.GoogleLatLon
+  GoogleLatLon: geohash64.GoogleLatLon,
+  GoogleHash64: geohash64.GoogleHash64
 };

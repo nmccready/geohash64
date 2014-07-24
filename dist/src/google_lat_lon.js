@@ -25,12 +25,17 @@ geohash64.GoogleLatLon = (function(_super) {
 
   function GoogleLatLon() {
     this.getGeoHash = __bind(this.getGeoHash, this);
+    this.toEqual = __bind(this.toEqual, this);
     this.toString = __bind(this.toString, this);
     return GoogleLatLon.__super__.constructor.apply(this, arguments);
   }
 
   GoogleLatLon.prototype.toString = function() {
-    return "geohash64.GoogleLatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon + ",";
+    return "geohash64.GoogleLatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon;
+  };
+
+  GoogleLatLon.prototype.toEqual = function(other) {
+    return other.lat === this.lat && other.lon === this.lon;
   };
 
   GoogleLatLon.prototype.maybeFlip = function(value) {
@@ -83,7 +88,7 @@ geohash64.GoogleLatLon = (function(_super) {
         });
       };
     })(this));
-    return hash;
+    return new geohash64.GoogleHash64(hash, this);
   };
 
   return GoogleLatLon;
