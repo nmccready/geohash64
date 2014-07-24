@@ -45,7 +45,7 @@ class geohash64.GoogleLatLon extends geohash64.LatLon
     if !set
       set = [@lat, @lon]
     hash = ''
-    console.log "set: #{set}"
+#    console.log "set: #{set}"
     set.map (coord) =>
       coord = @rounded(coord)
 #      console.log "Rounded Coord: #{coord}"

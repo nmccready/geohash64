@@ -3,7 +3,7 @@
  *
  * @version: 0.0.0
  * @author: Nicholas McCready
- * @date: Thu Jul 24 2014 12:02:18 GMT-0400 (EDT)
+ * @date: Thu Jul 24 2014 12:46:41 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
@@ -307,7 +307,6 @@ geohash64.GoogleLatLon = (function(_super) {
       set = [this.lat, this.lon];
     }
     hash = '';
-    console.log("set: " + set);
     set.map((function(_this) {
       return function(coord) {
         var chunks, value;

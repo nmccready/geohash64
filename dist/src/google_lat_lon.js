@@ -69,7 +69,6 @@ geohash64.GoogleLatLon = (function(_super) {
       set = [this.lat, this.lon];
     }
     hash = '';
-    console.log("set: " + set);
     set.map((function(_this) {
       return function(coord) {
         var chunks, value;
