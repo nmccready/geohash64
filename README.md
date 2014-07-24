@@ -1,23 +1,36 @@
 geohash64
 ==============
 
-Project is attempt of porting [python-geohash64](https://code.google.com/p/python-geohash64/source/browse/trunk/geohash64.py) base64 geo encodings to nodejs.
+Project is attempt of porting:
+ - google maps base64:
+  - [google algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
+  - [Nathan Villaescusa's, ptyhon code](https://gist.github.com/signed0/2031157)
 
 
-*Dependencies*
-- [bigint](https://github.com/substack/node-bigint)
+ - [python-geohash64](https://code.google.com/p/python-geohash64/source/browse/trunk/geohash64.py) base64 geo encodings to nodejs. (**eventually**)
+
 
 install
 =======
 
-You'll need the libgmp source to compile this package. Under Debian-based systems,
-
-    sudo aptitude install libgmp3-dev
-
-On a Mac with [Homebrew](https://github.com/mxcl/homebrew/),
-
-    brew install gmp
-
 And then install with [npm](http://npmjs.org):
 
     npm install
+
+use
+===
+Overall you should refer to the specs..
+
+But to enlighten everyone here are some specs copied here:
+
+    geohash64 = require 'geohash64'
+    manyHashes = ['_p~iF~ps|U', '_atqG`~oia@', '_flwFn`faV', '_t~fGfzxbW']
+    fullHash = manyHashes.reduce((prev, current) ->
+      prev + current)
+
+    #fullHash should be '_p~iF~ps|U_atqG`~oia@_flwFn`faV_t~fGfzxbW'
+    test1 = geohash64.encode(manyPoints) == fullHash
+
+    test2 = _.Equal(geohash64.decode(fullHash,true), manyPoints)
+
+    throw new Error('Hashes are not what expected!') unless (test1 and test2)
