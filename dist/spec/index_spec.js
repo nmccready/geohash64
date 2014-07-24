@@ -36,6 +36,7 @@ describe('GoogleLatLon', function() {
     }).should["throw"]();
   });
   return it('should parse known google hashes', function() {
+    (new geohash64.GoogleLatLon(38.5, -120.2)).getGeoHash().should.be.eql('_p~iF~ps|U');
     return (new geohash64.GoogleLatLon(45, -179.98321)).getGeoHash().should.be.eql('_atqG`~oia@');
   });
 });

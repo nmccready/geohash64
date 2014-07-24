@@ -2,7 +2,7 @@
 /*
   load with utf-8 encoding!!!!!!!!!!!!
  */
-var base64, bigint, float2int, geohash64, getGlobal, namespace, ns2, _;
+var base64, bigint, float2int, geohash64, getGlobal, namespace, ns2, utf8, _;
 
 getGlobal = function() {
   if (isNode) {
@@ -18,6 +18,7 @@ if (isNode) {
   _ = require('lodash');
   ns2 = require('ns2');
   namespace = ns2.namespace;
+  utf8 = require('utf8');
 }
 
 namespace('geohash64');

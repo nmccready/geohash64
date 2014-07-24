@@ -11,6 +11,7 @@ if isNode
   #  math = require 'math'
   ns2 = require 'ns2'
   namespace = ns2.namespace
+  utf8 = require 'utf8'
 
 namespace 'geohash64'
 ###

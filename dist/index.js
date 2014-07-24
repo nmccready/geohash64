@@ -3,7 +3,7 @@
  *
  * @version: 0.0.0
  * @author: Nicholas McCready
- * @date: Wed Jul 23 2014 17:42:49 GMT-0400 (EDT)
+ * @date: Thu Jul 24 2014 12:02:18 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
@@ -14,7 +14,7 @@ isNode =
 /*
   load with utf-8 encoding!!!!!!!!!!!!
  */
-var base64, bigint, float2int, geohash64, getGlobal, namespace, ns2, _;
+var base64, bigint, float2int, geohash64, getGlobal, namespace, ns2, utf8, _;
 
 getGlobal = function() {
   if (isNode) {
@@ -30,6 +30,7 @@ if (isNode) {
   _ = require('lodash');
   ns2 = require('ns2');
   namespace = ns2.namespace;
+  utf8 = require('utf8');
 }
 
 namespace('geohash64');
@@ -235,6 +236,22 @@ geohash64.GeoHash64 = (function() {
 
 })();
 
+
+/*
+  GoogleLatLon Class
+  desc: hash implementation of https://developers.google.com/maps/documentation/utilities/polylinealgorithm in nodejs
+  author: nick mccready
+  notes:
+    a way to play around in node
+    working from https://developers.google.com/maps/documentation/utilities/polylinealgorithm
+    (((((maybeFlip((rounded)<< 1))>>0) <<25>>25) & 0x1F)|0x20) + 63 = 96
+    (((((maybeFlip((rounded)<< 1))>>5) <<20>>20) & 0x1F)|0x20) + 63 = 126
+    (((((maybeFlip((rounded)<< 1))>>10)<<15>>15) & 0x1F)|0x20) + 63 = 111
+    (((((maybeFlip((rounded)<< 1))>>15)<<10>>10) & 0x1F)|0x20) + 63 = 105
+    (((((maybeFlip((rounded)<< 1))>>10)<<20>>20) & 0x1F)|0x20) + 63 = 111
+    (((((maybeFlip((rounded)<< 1))>>20)  <<5>>5) & 0x1F)|0x20) + 63 = 97
+    (((((maybeFlip((rounded)<< 1))>>25)  <<0>>0) & 0x1F)) + 63 = 64 (final no 5 bit chunks left no OR of 0x20)
+ */
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -242,8 +259,6 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 namespace('geohash64');
 
 geohash64.GoogleLatLon = (function(_super) {
-  var totalBits;
-
   __extends(GoogleLatLon, _super);
 
   function GoogleLatLon() {
@@ -251,8 +266,6 @@ geohash64.GoogleLatLon = (function(_super) {
     this.toString = __bind(this.toString, this);
     return GoogleLatLon.__super__.constructor.apply(this, arguments);
   }
-
-  totalBits = 30;
 
   GoogleLatLon.prototype.toString = function() {
     return "geohash64.GoogleLatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon + ",";
@@ -266,53 +279,47 @@ geohash64.GoogleLatLon = (function(_super) {
   };
 
   GoogleLatLon.prototype.rounded = function(value) {
-    return Math.round(Math.pow(10, 5) * value);
+    return Math.round(1e5 * value);
   };
 
   GoogleLatLon.prototype.mask = 0x1F;
 
-  GoogleLatLon.prototype.len = totalBits;
+  GoogleLatLon.prototype.chunkSize = 5;
+
+  GoogleLatLon.prototype.getChunks = function(value) {
+    var chunks;
+    chunks = [];
+    while (value >= 32) {
+      (function(_this) {
+        return (function() {
+          chunks.push((value & _this.mask) | 0x20);
+          return value >>= _this.chunkSize;
+        });
+      })(this)();
+    }
+    chunks.push(value);
+    return chunks;
+  };
 
   GoogleLatLon.prototype.getGeoHash = function(set) {
-    var hash, increment;
+    var hash;
     if (!set) {
       set = [this.lat, this.lon];
     }
     hash = '';
-    set = set.map((function(_this) {
-      return function(v) {
-        return _this.maybeFlip(_this.rounded(v) << 1);
-      };
-    })(this));
-
-    /*
-      working from https://developers.google.com/maps/documentation/utilities/polylinealgorithm
-      (((((maybeFlip((rounded)<< 1))>>0) <<25>>25) & 0x1F)|0x20) + 63 = 96
-      (((((maybeFlip((rounded)<< 1))>>5) <<20>>20) & 0x1F)|0x20) + 63 = 126
-      (((((maybeFlip((rounded)<< 1))>>10)<<15>>15) & 0x1F)|0x20) + 63 = 111
-      (((((maybeFlip((rounded)<< 1))>>15)<<10>>10) & 0x1F)|0x20) + 63 = 105
-      (((((maybeFlip((rounded)<< 1))>>10)<<20>>20) & 0x1F)|0x20) + 63 = 111
-      (((((maybeFlip((rounded)<< 1))>>20)  <<5>>5) & 0x1F)|0x20) + 63 = 97
-      (((((maybeFlip((rounded)<< 1))>>25)  <<0>>0) & 0x1F)) + 63 = 64 (final no 5 bit chunks left no OR of 0x20)
-     */
-    increment = 5;
     console.log("set: " + set);
-    set.forEach((function(_this) {
+    set.map((function(_this) {
       return function(coord) {
-        var i, _i, _ref, _results;
-        console.log("Coord: " + coord);
-        _results = [];
-        for (i = _i = 0, _ref = _this.len; increment > 0 ? _i < _ref : _i > _ref; i = _i += increment) {
-          console.log("i: " + i);
-          _results.push((function(i) {
-            var index, toOr;
-            toOr = i + increment !== _this.len ? 0x20 : 0;
-            index = ((((coord >> i) << _this.len - i >> _this.len - i) & _this.mask) | toOr) + 63;
-            console.log(index);
-            return hash += String.fromCharCode(index);
-          })(i));
-        }
-        return _results;
+        var chunks, value;
+        coord = _this.rounded(coord);
+        value = _this.maybeFlip(coord << 1);
+        chunks = _this.getChunks(value);
+        return chunks.forEach(function(c) {
+          var asciiIndex, hashToAdd;
+          asciiIndex = c + 63;
+          hashToAdd = String.fromCharCode(asciiIndex);
+          return hash += hashToAdd;
+        });
       };
     })(this));
     return hash;

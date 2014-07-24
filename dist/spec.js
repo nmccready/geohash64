@@ -3,7 +3,7 @@
  *
  * @version: 0.0.0
  * @author: Nicholas McCready
- * @date: Wed Jul 23 2014 17:42:49 GMT-0400 (EDT)
+ * @date: Thu Jul 24 2014 12:02:18 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
@@ -92,6 +92,7 @@ describe('GoogleLatLon', function() {
     }).should["throw"]();
   });
   return it('should parse known google hashes', function() {
+    (new geohash64.GoogleLatLon(38.5, -120.2)).getGeoHash().should.be.eql('_p~iF~ps|U');
     return (new geohash64.GoogleLatLon(45, -179.98321)).getGeoHash().should.be.eql('_atqG`~oia@');
   });
 });

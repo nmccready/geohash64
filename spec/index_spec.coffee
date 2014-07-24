@@ -73,4 +73,5 @@ describe 'GoogleLatLon', ->
     ( -> new geohash64.LatLon(45.1, -190)).should.throw()
 
   it 'should parse known google hashes', ->
+    (new geohash64.GoogleLatLon(38.5,-120.2)).getGeoHash().should.be.eql('_p~iF~ps|U')
     (new geohash64.GoogleLatLon(45,-179.98321)).getGeoHash().should.be.eql('_atqG`~oia@')
