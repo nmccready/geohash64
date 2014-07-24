@@ -1,9 +1,9 @@
 /**
- *  geohash64js
+ *  geohash64
  *
  * @version: 1.0.0
  * @author: Nicholas McCready
- * @date: Thu Jul 24 2014 17:20:13 GMT-0400 (EDT)
+ * @date: Thu Jul 24 2014 17:23:56 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =

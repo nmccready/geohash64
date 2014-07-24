@@ -1,15 +1,15 @@
 {
-  "name": "geohash64js",
+  "name": "geohash64",
   "version": "1.0.0",
   "description": "attempt at a google maps base64 geohash in nodjs port of https://gist.github.com/signed0/2031157",
   "main": "./dist/index.js",
   "scripts": {
     "test": "cgulp spec"
   },
-  "homepage": "https://github.com/nmccready/geohash64js",
+  "homepage": "https://github.com/nmccready/geohash64",
   "repository": {
     "type": "git",
-    "url": "git://github.com/nmccready/geohash64js.git"
+    "url": "git://github.com/nmccready/geohash64.git"
   },
   "author": "Nicholas McCready",
   "license": "MIT",
