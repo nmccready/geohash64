@@ -1,3 +1,4 @@
+pkg = require '../package.json'
 namespace 'geohash64'
 ###
   encode:
@@ -39,3 +40,5 @@ module.exports =
   GoogleLatLon: geohash64.GoogleLatLon
   GoogleHash64: geohash64.GoogleHash64
   GoogleCoder: geohash64.GoogleCoder
+  name: pkg.name
+  version: pkg.version

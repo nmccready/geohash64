@@ -1,3 +1,7 @@
+var pkg;
+
+pkg = require('../package.json');
+
 namespace('geohash64');
 
 
@@ -68,5 +72,7 @@ module.exports = {
   GeoHash64: geohash64.GeoHash64,
   GoogleLatLon: geohash64.GoogleLatLon,
   GoogleHash64: geohash64.GoogleHash64,
-  GoogleCoder: geohash64.GoogleCoder
+  GoogleCoder: geohash64.GoogleCoder,
+  name: pkg.name,
+  version: pkg.version
 };

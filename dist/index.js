@@ -1,9 +1,9 @@
 /**
  *  geohash64
  *
- * @version: 1.0.0
+ * @version: 1.0.1
  * @author: Nicholas McCready
- * @date: Fri Jul 25 2014 11:16:51 GMT-0400 (EDT)
+ * @date: Fri Jul 25 2014 12:04:24 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
@@ -470,6 +470,10 @@ geohash64.GoogleLatLon = (function(_super) {
 
 })(geohash64.LatLon);
 
+var pkg;
+
+pkg = require('../package.json');
+
 namespace('geohash64');
 
 
@@ -540,5 +544,7 @@ module.exports = {
   GeoHash64: geohash64.GeoHash64,
   GoogleLatLon: geohash64.GoogleLatLon,
   GoogleHash64: geohash64.GoogleHash64,
-  GoogleCoder: geohash64.GoogleCoder
+  GoogleCoder: geohash64.GoogleCoder,
+  name: pkg.name,
+  version: pkg.version
 };

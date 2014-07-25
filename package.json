@@ -1,6 +1,6 @@
 {
   "name": "geohash64",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "attempt at a google maps base64 geohash in nodjs port of https://gist.github.com/signed0/2031157",
   "main": "./dist/index.js",
   "scripts": {
@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "lodash": "^2.4.1",
-    "ns2": "^1.0.0"
+    "ns2": "^1.0.1"
   },
   "devDependencies": {
     "coffee-script": "^1.7.1",
