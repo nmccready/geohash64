@@ -15,6 +15,7 @@
 ###
 namespace 'geohash64'
 class geohash64.GoogleLatLon extends geohash64.LatLon
+  @include geohash64.GoogleCoder
   toString: =>
     """geohash64.GoogleLatLon unit='degree'
     lat:#{@lat}, lon:#{@lon}
@@ -22,46 +23,11 @@ class geohash64.GoogleLatLon extends geohash64.LatLon
   toEqual: (other) =>
     other.lat == @lat and other.lon == @lon
 
-  maybeFlip: (value) ->
-    if value < 0
-      return ~value
-    value
-
-  rounded: (value) ->
-    Math.round 1e5 * value
-
-  #forcing only 5 bits
-  mask: 0x1F #31 decimal
-  chunkSize: 5
-
-  #shamelessly copied from here : https://gist.github.com/signed0/2031157
-  getChunks: (value) ->
-    chunks = []
-    while value >= 32
-      do =>
-        chunks.push (value & @mask) | 0x20
-        value >>= @chunkSize
-    chunks.push value
-    chunks
-
   getGeoHash: (precision,set) =>
     if !set
       set = [@lat, @lon]
     hash = ''
 #    console.log "set: #{set}"
     set.map (coord) =>
-      coord = @rounded(coord)
-#      console.log "Rounded Coord: #{coord}"
-      #step 2 & 4
-      value = @maybeFlip coord << 1
-#      console.log "After maybeflip:#{value}"
-      #Step 5 - 8
-      chunks = @getChunks value
-      # Step 9-10
-      chunks.forEach (c) ->
-        asciiIndex = c + 63
-#        console.log "asciiIndex: #{asciiIndex}"
-        hashToAdd =  String.fromCharCode asciiIndex
-#        console.log "hashToAdd: #{hashToAdd}"
-        hash += hashToAdd
+      hash += @encode coord
     return new geohash64.GoogleHash64(hash,@) #pass @ to not have to decode

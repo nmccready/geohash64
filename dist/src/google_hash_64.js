@@ -1,8 +1,14 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 namespace('geohash64');
 
-geohash64.GoogleHash64 = (function() {
+geohash64.GoogleHash64 = (function(_super) {
+  __extends(GoogleHash64, _super);
+
+  GoogleHash64.include(geohash64.GoogleCoder);
+
   function GoogleHash64(hash, center_ll, precision) {
     this.hash = hash;
     this.center_ll = center_ll;
@@ -21,57 +27,13 @@ geohash64.GoogleHash64 = (function() {
     return "geohash64.GoogleHash64:\nhash: " + this.hash + ",center_ll: " + this.center_ll;
   };
 
-  GoogleHash64.prototype.ord = function(str) {
-    return str.charCodeAt(0);
-  };
-
-  GoogleHash64.prototype.round = function(value) {
-    return value.toFixed(this.precision);
-  };
-
-  GoogleHash64.prototype.tuple = function(left, right) {
-    return new geohash64.GoogleLatLon(left, right);
-  };
-
-  GoogleHash64.prototype.mask = 0x1F;
-
   GoogleHash64.prototype.hash2geo = function(doReturnPoints) {
-    var chunkSet, coord_chunks, coords, i, point_str, points, prev_x, prev_y, _fn, _i, _ref;
+    var coords, i, points, prev_x, prev_y, _fn, _i, _ref;
     if (doReturnPoints == null) {
       doReturnPoints = false;
     }
-    point_str = this.hash;
     'Decodes a polyline that has been encoded using Google\'s algorithm\nhttp://code.google.com/apis/maps/documentation/polylinealgorithm.html\n\nThis is a generic method that returns a list of (latitude, longitude)\ntuples.\n\n:param point_str: Encoded polyline string.\n:type point_str: string\n:returns: List of 2-tuples where each tuple is (latitude, longitude)\n:rtype: list\n';
-    coord_chunks = [[]];
-    chunkSet = 0;
-    _(point_str).each((function(_this) {
-      return function(char) {
-        var split_after, value;
-        value = _this.ord(char) - 63;
-        split_after = !(value & 0x20);
-        value &= _this.mask;
-        coord_chunks[chunkSet].push(value);
-        if (split_after) {
-          chunkSet += 1;
-          return coord_chunks.push([]);
-        }
-      };
-    })(this));
-    coord_chunks.pop();
-    coord_chunks.forEach(function(chunk, key) {});
-    coords = coord_chunks.map(function(coord_chunk) {
-      var coord;
-      coord = 0;
-      coord_chunk.forEach(function(chunk, i) {
-        return coord |= chunk << (i * 5);
-      });
-      if (coord & 0x1) {
-        coord = ~coord;
-      }
-      coord >>= 1;
-      coord /= 100000.0;
-      return coord;
-    });
+    coords = this.decode(this.hash);
     points = [];
     prev_x = 0;
     prev_y = 0;
@@ -80,7 +42,7 @@ geohash64.GoogleHash64 = (function() {
         if (!(coords[i] === 0 && coords[i + 1] === 0)) {
           prev_y += coords[i + 1];
           prev_x += coords[i];
-          _this.center_ll = _this.tuple(_this.round(prev_x), _this.round(prev_y));
+          _this.center_ll = _this.tuple(_this.round(prev_x, _this.precision), _this.round(prev_y, _this.precision));
           points.push(_this.center_ll);
         }
         prev_x = 0;
@@ -98,4 +60,4 @@ geohash64.GoogleHash64 = (function() {
 
   return GoogleHash64;
 
-})();
+})(ns2.BaseObject);

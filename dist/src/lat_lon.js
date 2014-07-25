@@ -1,8 +1,12 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 namespace('geohash64');
 
-geohash64.LatLon = (function() {
+geohash64.LatLon = (function(_super) {
+  __extends(LatLon, _super);
+
   function LatLon(lat, lon) {
     this.distance_from = __bind(this.distance_from, this);
     this.distance_to = __bind(this.distance_to, this);
@@ -86,4 +90,4 @@ geohash64.LatLon = (function() {
 
   return LatLon;
 
-})();
+})(ns2.BaseObject);

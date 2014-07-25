@@ -2,7 +2,7 @@
 # LatLon Class
 ###############################################################################
 namespace 'geohash64'
-class geohash64.LatLon
+class geohash64.LatLon extends ns2.BaseObject
   constructor: (lat, lon) ->
     if not (-90 <= lat and lat <= 90)
       throw new Error('lat is out of range.')

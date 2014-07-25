@@ -55,9 +55,18 @@ geohash64.decode = function(hash, doConvertToLatLonArrayOfArray, decoder, type) 
 module.exports = {
   encode: geohash64.encode,
   decode: geohash64.decode,
+  encodeZoom: function(intNum) {
+    var isZoom;
+    return geohash64.GoogleCoder.encode(intNum, isZoom = true);
+  },
+  decodeZoom: function(hash) {
+    var isSingle, isZoom;
+    return geohash64.GoogleCoder.decode(hash, isZoom = true, isSingle = true);
+  },
   LatLon: geohash64.LatLon,
   Coordinate: geohash64.Coordinate,
   GeoHash64: geohash64.GeoHash64,
   GoogleLatLon: geohash64.GoogleLatLon,
-  GoogleHash64: geohash64.GoogleHash64
+  GoogleHash64: geohash64.GoogleHash64,
+  GoogleCoder: geohash64.GoogleCoder
 };
