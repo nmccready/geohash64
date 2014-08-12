@@ -1,5 +1,8 @@
 geohash64
 ==============
+[![Dependencies](https://david-dm.org/nmccready/geohash64.png)](https://david-dm.org/nmccready/geohash64)&nbsp;
+[![Dependencies](https://david-dm.org/nmccready/geohash64.png)](https://david-dm.org/nmccready/geohash64)&nbsp;
+[![Build Status](https://travis-ci.org/nmccready/geohash64.png?branch=r1-dev)](https://travis-ci.org/nmccready/geohash64)
 
 Project is attempt of porting:
  - google maps base64:
