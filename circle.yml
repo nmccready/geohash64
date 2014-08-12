@@ -1,3 +1,6 @@
 machine:
   node:
     version: v0.10.29
+dependencies:
+  override:
+    - npm install -g gulp coffeegulp
