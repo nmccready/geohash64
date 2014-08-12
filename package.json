@@ -4,7 +4,8 @@
   "description": "ptyhon port attempt at a google maps base64 geohash of https://gist.github.com/signed0/2031157",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "cgulp spec"
+    "build":"coffeegulp",
+    "test": "coffeegulp spec"
   },
   "homepage": "https://github.com/nmccready/geohash64",
   "repository": {
