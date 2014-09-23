@@ -3,7 +3,7 @@
  *
  * @version: 1.0.2
  * @author: Nicholas McCready
- * @date: Mon Sep 22 2014 20:16:16 GMT-0400 (EDT)
+ * @date: Mon Sep 22 2014 20:25:27 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
@@ -49,8 +49,9 @@ MIT license.
  */
 describe('geohash64', function() {
   after(function() {
-    var art;
-    art = "                    .__                  .__      ________   _____\n  ____   ____  ____ |  |__ _____    _____|  |__  /  _____/  /  |  |\n / ___\\_/ __ \\/  _ \\|  |  \\\\__  \\  /  ___/  |  \\/   __  \\  /   |  |_\n/ /_/  >  ___(  <_> )   Y  \\/ __ \\_\\___ \\|   Y  \\  |__\\  \\/    ^   /\n\\___  / \\___  >____/|___|  (____  /____  >___|  /\\_____  /\\____   |\n/_____/     \\/           \\/     \\/     \\/     \\/       \\/      |__|\n";
+    var art, crap;
+    crap = '';
+    art = "" + crap + "\n                    .__                  .__      ________   _____\n  ____   ____  ____ |  |__ _____    _____|  |__  /  _____/  /  |  |\n / ___\\_/ __ \\/  _ \\|  |  \\\\__  \\  /  ___/  |  \\/   __  \\  /   |  |_\n/ /_/  >  ___(  <_> )   Y  \\/ __ \\_\\___ \\|   Y  \\  |__\\  \\/    ^   /\n\\___  / \\___  >____/|___|  (____  /____  >___|  /\\_____  /\\____   |\n/_____/     \\/           \\/     \\/     \\/     \\/       \\/      |__|";
     console.log(art);
     return console.log("\nname:" + geohash64.name + ", version: " + geohash64.version);
   });
@@ -165,7 +166,7 @@ describe('geohash64', function() {
               return geohash64.encode(googlesPoints).should.eql(googlesFullHash);
             });
             return it('another long set', function() {
-              return geohash64.encode([[30.90040, -87.51309], [30.59827, -81.64640], [27.05724, -80.06436], [25.16325, -80.61368], [26.01539, -81.82218], [27.85663, -82.81095], [29.07352, -82.83299], [30.04824, -84.06339], [29.70529, -85.14005], [30.48472, -86.48038], [30.21927, -87.82071], [30.91926, -87.99649], [30.87372, -87.51384]]).should.eql("ofr{DxkcuOh_z@yyxb@lrrTw~sHl|pJfhjB{leDb`kFwrfJxb`EqtlFvhC_k}D~hoFl~aAbhqEmfwC`xdG`zr@`xdG}ugCria@r{Gqg}A");
+              return geohash64.encode([[30.90040, -87.51309], [30.59827, -81.64640], [27.05724, -80.06436], [25.16325, -80.61368], [26.01539, -81.82218], [27.85663, -82.81095], [29.07352, -82.83299], [30.04824, -84.06339], [29.70529, -85.14005], [30.48472, -86.48038], [30.21927, -87.82071], [30.91926, -87.99649], [30.87372, -87.51384]]).should.eql('ofr{DxkcuOh_z@yyxb@lrrTw~sHl|pJfhjB{leDb`kFwrfJxb`EqtlFvhC_k}D~hoFl~aAbhqEmfwC`xdG`zr@`xdG}ugCria@r{Gqg}A');
             });
           });
           return it('smaller', function() {
