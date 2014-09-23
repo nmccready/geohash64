@@ -17,7 +17,7 @@ ignore = require 'gulp-ignore'
 es = require 'event-stream'
 debug = require 'gulp-debug'
 help = require 'gulp-task-listing' #command avail cgulp help (shows all tasks)
-ourUtils = require './gulputils'
+ourUtils = require './gulp/gulputils'
 replace = require 'gulp-replace'
 gzip = require 'gulp-gzip'
 tar = require 'gulp-tar'
@@ -27,7 +27,7 @@ ourPackage = require './package.json'
 karma = require 'gulp-karma'
 open = require 'gulp-open'
 
-main = require('./gulpmain')(_, gulp, coffee, concat, rename, log, clean, gulpif, coffeelint, serve, ignore, es,
+main = require('./gulp/gulpmain')(_, gulp, coffee, concat, rename, log, clean, gulpif, coffeelint, serve, ignore, es,
     debug, help, ourUtils, replace, gzip, tar, insert, mocha, ourPackage, karma, open)
 
 #karma = require('./gulpkarma')(_, gulp, coffee, concat, rename, log, clean, gulpif, coffeelint, serve, ignore, es,

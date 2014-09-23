@@ -16,6 +16,15 @@
 namespace 'geohash64'
 class geohash64.GoogleLatLon extends geohash64.LatLon
   @include geohash64.GoogleCoder
+  constructor: (arg1, arg2) ->
+    super(arg1,arg2)
+    if arg2? and _.isArray arg2
+      previousCoord = arg2
+      @from =
+        new geohash64.GoogleLatLon previousCoord
+      @magnitude =
+        new geohash64.GoogleLatLon @lat - @from.lat, @lon - @from.lon
+
   toString: =>
     """geohash64.GoogleLatLon unit='degree'
     lat:#{@lat}, lon:#{@lon}
@@ -25,7 +34,13 @@ class geohash64.GoogleLatLon extends geohash64.LatLon
 
   getGeoHash: (precision,set) =>
     if !set
-      set = [@lat, @lon]
+      #missed this lovley piece of info on google's algo
+      #ADDITIONALLY, to conserve space, points only include the offset from the previous point
+      # console.info "from: " + @from
+      # console.info "MAG: " + @magnitude
+      # console.info "\n"
+      set = unless @magnitude? then [@lat, @lon] else [@magnitude.lat,@magnitude.lon]
+
     hash = ''
 #    console.log "set: #{set}"
     set.map (coord) =>

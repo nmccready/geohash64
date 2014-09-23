@@ -40,7 +40,7 @@ geohash64.GeoHash64 = (function() {
     ];
     lat = 0.0;
     lon = 0.0;
-    console.log(decimal_list);
+    console.info(decimal_list);
     for (_i = decimal_list.length - 1; _i >= 0; _i += -1) {
       decimal = decimal_list[_i];
       console.log("DECIMAL: " + decimal);

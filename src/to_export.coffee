@@ -14,9 +14,13 @@ geohash64.encode = (latLonArray, precision = 5, encoder = geohash64.GoogleLatLon
     latLon.length == 2
   throw new Error('All lat/lon objects are valid') unless allAreValid
   finalHash = ''
-  latLonArray.forEach (ll) ->
-    ll = new encoder(ll[0], ll[1])
-    finalHash += ll.getGeoHash(precision).hash
+  previous = undefined
+  latLonArray.forEach (array) ->
+    # console.info "array: " + array
+    # console.info "previous: " + previous
+    latLon = new encoder(array,previous)
+    previous = array
+    finalHash += latLon.getGeoHash(precision).hash
   finalHash
 
 geohash64.decode = (hash, doConvertToLatLonArrayOfArray, decoder = geohash64.GoogleHash64, type = 'geohash64.GoogleHash64')->

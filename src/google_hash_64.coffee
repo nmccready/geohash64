@@ -48,8 +48,6 @@ class geohash64.GoogleHash64 extends ns2.BaseObject
           @center_ll = @tuple @round(prev_x,@precision), @round(prev_y,@precision)
 #          console.log "center_ll: #{@center_ll.toString()}"
           points.push @center_ll
-        prev_x = 0 #reset the crap
-        prev_y = 0
 
     return points if doReturnPoints
     return @center_ll #conform to python geohash api

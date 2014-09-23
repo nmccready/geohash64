@@ -3,13 +3,26 @@
 ###############################################################################
 namespace 'geohash64'
 class geohash64.LatLon extends ns2.BaseObject
-  constructor: (lat, lon) ->
+  constructor: (arg1, arg2) ->
+    if _.isArray arg1
+      lat = arg1[0]
+      lon = arg1[1]
+    else
+      lat = arg1
+      lon = arg2
+    if !arg1?
+      throw new Error('One of LatLong arg1')
+    if arg2?
+      arg2Type = typeof arg2
+      arg1Type = typeof arg1
+      if arg2Type != arg1Type
+        throw new Error("arg1 to arg2 type mismatch: arg1 type: #{arg1Type}, arg2 type: #{arg2Type}");
     if not (-90 <= lat and lat <= 90)
       throw new Error('lat is out of range.')
     if not (-180 <= lon and lon <= 180)
       throw new Error('lon is out of range.')
-    @lat = parseFloat(lat)
-    @lon = parseFloat(lon)
+    @lat = Number(lat)
+    @lon = Number(lon)
 
   toString: =>
     """geohash64.LatLon unit='degree'

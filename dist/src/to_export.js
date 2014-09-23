@@ -14,7 +14,7 @@ namespace('geohash64');
  */
 
 geohash64.encode = function(latLonArray, precision, encoder) {
-  var allAreValid, finalHash;
+  var allAreValid, finalHash, previous;
   if (precision == null) {
     precision = 5;
   }
@@ -31,9 +31,12 @@ geohash64.encode = function(latLonArray, precision, encoder) {
     throw new Error('All lat/lon objects are valid');
   }
   finalHash = '';
-  latLonArray.forEach(function(ll) {
-    ll = new encoder(ll[0], ll[1]);
-    return finalHash += ll.getGeoHash(precision).hash;
+  previous = void 0;
+  latLonArray.forEach(function(array) {
+    var latLon;
+    latLon = new encoder(array, previous);
+    previous = array;
+    return finalHash += latLon.getGeoHash(precision).hash;
   });
   return finalHash;
 };

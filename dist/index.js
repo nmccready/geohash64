@@ -3,7 +3,7 @@
  *
  * @version: 1.0.1
  * @author: Nicholas McCready
- * @date: Fri Jul 25 2014 12:04:24 GMT-0400 (EDT)
+ * @date: Mon Sep 22 2014 20:05:54 GMT-0400 (EDT)
  * @license: MIT
  */
 isNode =
@@ -108,20 +108,38 @@ namespace('geohash64');
 geohash64.LatLon = (function(_super) {
   __extends(LatLon, _super);
 
-  function LatLon(lat, lon) {
+  function LatLon(arg1, arg2) {
     this.distance_from = __bind(this.distance_from, this);
     this.distance_to = __bind(this.distance_to, this);
     this.getGeoHash = __bind(this.getGeoHash, this);
     this.add = __bind(this.add, this);
     this.toString = __bind(this.toString, this);
+    var arg1Type, arg2Type, lat, lon;
+    if (_.isArray(arg1)) {
+      lat = arg1[0];
+      lon = arg1[1];
+    } else {
+      lat = arg1;
+      lon = arg2;
+    }
+    if (arg1 == null) {
+      throw new Error('One of LatLong arg1');
+    }
+    if (arg2 != null) {
+      arg2Type = typeof arg2;
+      arg1Type = typeof arg1;
+      if (arg2Type !== arg1Type) {
+        throw new Error("arg1 to arg2 type mismatch: arg1 type: " + arg1Type + ", arg2 type: " + arg2Type);
+      }
+    }
     if (!(-90 <= lat && lat <= 90)) {
       throw new Error('lat is out of range.');
     }
     if (!(-180 <= lon && lon <= 180)) {
       throw new Error('lon is out of range.');
     }
-    this.lat = parseFloat(lat);
-    this.lon = parseFloat(lon);
+    this.lat = Number(lat);
+    this.lon = Number(lon);
   }
 
   LatLon.prototype.toString = function() {
@@ -254,7 +272,7 @@ geohash64.GeoHash64 = (function() {
     ];
     lat = 0.0;
     lon = 0.0;
-    console.log(decimal_list);
+    console.info(decimal_list);
     for (_i = decimal_list.length - 1; _i >= 0; _i += -1) {
       decimal = decimal_list[_i];
       console.log("DECIMAL: " + decimal);
@@ -283,6 +301,15 @@ geohash64.GeoHash64 = (function() {
 })();
 
 ns2.namespace('geohash64');
+
+
+/*
+ NOTE in testing this library against google; you are only garunteed to get matches
+ (encded hash to decoded points) for up to 5 decimals of accuracy. Therefore if you
+ play with the Google Widget only encode lat lons with 5 decimals max.
+
+ https://google-developers.appspot.com/maps/documentation/utilities/polylineutility_63b1683dd5bb00fea0eb2d1356fa8a61.frame?hl=en
+ */
 
 geohash64.GoogleCoder = {
   encode: function(value, isZoom) {
@@ -391,10 +418,8 @@ geohash64.GoogleHash64 = (function(_super) {
           prev_y += coords[i + 1];
           prev_x += coords[i];
           _this.center_ll = _this.tuple(_this.round(prev_x, _this.precision), _this.round(prev_y, _this.precision));
-          points.push(_this.center_ll);
+          return points.push(_this.center_ll);
         }
-        prev_x = 0;
-        return prev_y = 0;
       };
     })(this);
     for (i = _i = 0, _ref = coords.length; _i < _ref; i = _i += 2) {
@@ -435,14 +460,20 @@ namespace('geohash64');
 geohash64.GoogleLatLon = (function(_super) {
   __extends(GoogleLatLon, _super);
 
-  function GoogleLatLon() {
+  GoogleLatLon.include(geohash64.GoogleCoder);
+
+  function GoogleLatLon(arg1, arg2) {
     this.getGeoHash = __bind(this.getGeoHash, this);
     this.toEqual = __bind(this.toEqual, this);
     this.toString = __bind(this.toString, this);
-    return GoogleLatLon.__super__.constructor.apply(this, arguments);
+    var previousCoord;
+    GoogleLatLon.__super__.constructor.call(this, arg1, arg2);
+    if ((arg2 != null) && _.isArray(arg2)) {
+      previousCoord = arg2;
+      this.from = new geohash64.GoogleLatLon(previousCoord);
+      this.magnitude = new geohash64.GoogleLatLon(this.lat - this.from.lat, this.lon - this.from.lon);
+    }
   }
-
-  GoogleLatLon.include(geohash64.GoogleCoder);
 
   GoogleLatLon.prototype.toString = function() {
     return "geohash64.GoogleLatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon;
@@ -455,7 +486,7 @@ geohash64.GoogleLatLon = (function(_super) {
   GoogleLatLon.prototype.getGeoHash = function(precision, set) {
     var hash;
     if (!set) {
-      set = [this.lat, this.lon];
+      set = this.magnitude == null ? [this.lat, this.lon] : [this.magnitude.lat, this.magnitude.lon];
     }
     hash = '';
     set.map((function(_this) {
@@ -486,7 +517,7 @@ namespace('geohash64');
  */
 
 geohash64.encode = function(latLonArray, precision, encoder) {
-  var allAreValid, finalHash;
+  var allAreValid, finalHash, previous;
   if (precision == null) {
     precision = 5;
   }
@@ -503,9 +534,12 @@ geohash64.encode = function(latLonArray, precision, encoder) {
     throw new Error('All lat/lon objects are valid');
   }
   finalHash = '';
-  latLonArray.forEach(function(ll) {
-    ll = new encoder(ll[0], ll[1]);
-    return finalHash += ll.getGeoHash(precision).hash;
+  previous = void 0;
+  latLonArray.forEach(function(array) {
+    var latLon;
+    latLon = new encoder(array, previous);
+    previous = array;
+    return finalHash += latLon.getGeoHash(precision).hash;
   });
   return finalHash;
 };

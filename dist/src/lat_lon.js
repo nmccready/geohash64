@@ -7,20 +7,38 @@ namespace('geohash64');
 geohash64.LatLon = (function(_super) {
   __extends(LatLon, _super);
 
-  function LatLon(lat, lon) {
+  function LatLon(arg1, arg2) {
     this.distance_from = __bind(this.distance_from, this);
     this.distance_to = __bind(this.distance_to, this);
     this.getGeoHash = __bind(this.getGeoHash, this);
     this.add = __bind(this.add, this);
     this.toString = __bind(this.toString, this);
+    var arg1Type, arg2Type, lat, lon;
+    if (_.isArray(arg1)) {
+      lat = arg1[0];
+      lon = arg1[1];
+    } else {
+      lat = arg1;
+      lon = arg2;
+    }
+    if (arg1 == null) {
+      throw new Error('One of LatLong arg1');
+    }
+    if (arg2 != null) {
+      arg2Type = typeof arg2;
+      arg1Type = typeof arg1;
+      if (arg2Type !== arg1Type) {
+        throw new Error("arg1 to arg2 type mismatch: arg1 type: " + arg1Type + ", arg2 type: " + arg2Type);
+      }
+    }
     if (!(-90 <= lat && lat <= 90)) {
       throw new Error('lat is out of range.');
     }
     if (!(-180 <= lon && lon <= 180)) {
       throw new Error('lon is out of range.');
     }
-    this.lat = parseFloat(lat);
-    this.lon = parseFloat(lon);
+    this.lat = Number(lat);
+    this.lon = Number(lon);
   }
 
   LatLon.prototype.toString = function() {

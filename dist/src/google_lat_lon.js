@@ -23,14 +23,20 @@ namespace('geohash64');
 geohash64.GoogleLatLon = (function(_super) {
   __extends(GoogleLatLon, _super);
 
-  function GoogleLatLon() {
+  GoogleLatLon.include(geohash64.GoogleCoder);
+
+  function GoogleLatLon(arg1, arg2) {
     this.getGeoHash = __bind(this.getGeoHash, this);
     this.toEqual = __bind(this.toEqual, this);
     this.toString = __bind(this.toString, this);
-    return GoogleLatLon.__super__.constructor.apply(this, arguments);
+    var previousCoord;
+    GoogleLatLon.__super__.constructor.call(this, arg1, arg2);
+    if ((arg2 != null) && _.isArray(arg2)) {
+      previousCoord = arg2;
+      this.from = new geohash64.GoogleLatLon(previousCoord);
+      this.magnitude = new geohash64.GoogleLatLon(this.lat - this.from.lat, this.lon - this.from.lon);
+    }
   }
-
-  GoogleLatLon.include(geohash64.GoogleCoder);
 
   GoogleLatLon.prototype.toString = function() {
     return "geohash64.GoogleLatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon;
@@ -43,7 +49,7 @@ geohash64.GoogleLatLon = (function(_super) {
   GoogleLatLon.prototype.getGeoHash = function(precision, set) {
     var hash;
     if (!set) {
-      set = [this.lat, this.lon];
+      set = this.magnitude == null ? [this.lat, this.lon] : [this.magnitude.lat, this.magnitude.lon];
     }
     hash = '';
     set.map((function(_this) {

@@ -43,10 +43,8 @@ geohash64.GoogleHash64 = (function(_super) {
           prev_y += coords[i + 1];
           prev_x += coords[i];
           _this.center_ll = _this.tuple(_this.round(prev_x, _this.precision), _this.round(prev_y, _this.precision));
-          points.push(_this.center_ll);
+          return points.push(_this.center_ll);
         }
-        prev_x = 0;
-        return prev_y = 0;
       };
     })(this);
     for (i = _i = 0, _ref = coords.length; _i < _ref; i = _i += 2) {

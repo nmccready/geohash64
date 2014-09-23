@@ -25,7 +25,7 @@ class geohash64.GeoHash64
 #    decimal_list = _(@hash).map (s) -> geohash64.codeMap[s] # s = "Z"
     lat = 0.0
     lon = 0.0
-    console.log decimal_list
+    console.info decimal_list
     for decimal in decimal_list by -1
       # decimal = 25 = 0b011001
       console.log "DECIMAL: #{decimal}"
