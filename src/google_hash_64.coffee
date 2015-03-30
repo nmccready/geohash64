@@ -1,15 +1,14 @@
 ###############################################################################
 # GoogleHash64 Class
 ###############################################################################
-namespace 'geohash64'
-class geohash64.GoogleHash64 extends ns2.BaseObject
-  @include geohash64.GoogleCoder
+class GoogleHash64
   constructor: (@hash, @center_ll, @precision = 6) ->
+    _.extend @, GoogleCoder
     throw new Error 'Argument is invalid' unless _.isString @hash
     @hash2geo() unless @center_ll
 
   toString: =>
-    """geohash64.GoogleHash64:
+    """GoogleHash64:
             hash: #{@hash},center_ll: #{@center_ll}"""
 
   #ported https://gist.github.com/signed0/2031157, thanks!

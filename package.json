@@ -1,6 +1,6 @@
 {
   "name": "geohash64",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "ptyhon port attempt at a google maps base64 geohash of https://gist.github.com/signed0/2031157",
   "main": "./dist/index.js",
   "scripts": {
@@ -15,9 +15,8 @@
   "author": "Nicholas McCready",
   "license": "MIT",
   "dependencies": {
-    "lodash": "^2.4.1",
-    "ns2": "^1.0.1"
-  },
+    "lodash": "^2.4.1"
+    },
   "devDependencies": {
     "coffee-script": "^1.7.1",
     "event-stream": "^3.1.5",
@@ -40,7 +39,6 @@
     "gulp-tar": "^0.5.0",
     "gulp-task-listing": "^0.3.0",
     "gulp-util": "^2.2.20",
-    "isnode": "0.0.1",
     "karma": "^0.12.17",
     "karma-chrome-launcher": "^0.1.4",
     "karma-coffee-preprocessor": "^0.2.1",

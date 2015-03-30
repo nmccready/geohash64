@@ -1,5 +1,3 @@
-ns2.namespace('geohash64');
-
 
 /*
  NOTE in testing this library against google; you are only garunteed to get matches
@@ -8,8 +6,9 @@ ns2.namespace('geohash64');
 
  https://google-developers.appspot.com/maps/documentation/utilities/polylineutility_63b1683dd5bb00fea0eb2d1356fa8a61.frame?hl=en
  */
+var GoogleCoder;
 
-geohash64.GoogleCoder = {
+GoogleCoder = {
   encode: function(value, isZoom) {
     var chunks, hash;
     hash = '';
@@ -65,7 +64,7 @@ geohash64.GoogleCoder = {
   },
   tuple: function(left, right, factory) {
     if (factory == null) {
-      factory = geohash64.GoogleLatLon;
+      factory = GoogleLatLon;
     }
     return new factory(left, right);
   }

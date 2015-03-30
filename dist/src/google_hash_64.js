@@ -1,20 +1,14 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var GoogleHash64,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-namespace('geohash64');
-
-geohash64.GoogleHash64 = (function(_super) {
-  __extends(GoogleHash64, _super);
-
-  GoogleHash64.include(geohash64.GoogleCoder);
-
+GoogleHash64 = (function() {
   function GoogleHash64(hash, center_ll, precision) {
     this.hash = hash;
     this.center_ll = center_ll;
     this.precision = precision != null ? precision : 6;
-    this.hash2geo = __bind(this.hash2geo, this);
-    this.toString = __bind(this.toString, this);
+    this.hash2geo = bind(this.hash2geo, this);
+    this.toString = bind(this.toString, this);
+    _.extend(this, GoogleCoder);
     if (!_.isString(this.hash)) {
       throw new Error('Argument is invalid');
     }
@@ -24,11 +18,11 @@ geohash64.GoogleHash64 = (function(_super) {
   }
 
   GoogleHash64.prototype.toString = function() {
-    return "geohash64.GoogleHash64:\nhash: " + this.hash + ",center_ll: " + this.center_ll;
+    return "GoogleHash64:\nhash: " + this.hash + ",center_ll: " + this.center_ll;
   };
 
   GoogleHash64.prototype.hash2geo = function(doReturnPoints) {
-    var coords, i, points, prev_x, prev_y, _fn, _i, _ref;
+    var coords, fn, i, j, points, prev_x, prev_y, ref;
     if (doReturnPoints == null) {
       doReturnPoints = false;
     }
@@ -37,7 +31,7 @@ geohash64.GoogleHash64 = (function(_super) {
     points = [];
     prev_x = 0;
     prev_y = 0;
-    _fn = (function(_this) {
+    fn = (function(_this) {
       return function(i) {
         if (!(coords[i] === 0 && coords[i + 1] === 0)) {
           prev_y += coords[i + 1];
@@ -47,8 +41,8 @@ geohash64.GoogleHash64 = (function(_super) {
         }
       };
     })(this);
-    for (i = _i = 0, _ref = coords.length; _i < _ref; i = _i += 2) {
-      _fn(i);
+    for (i = j = 0, ref = coords.length; j < ref; i = j += 2) {
+      fn(i);
     }
     if (doReturnPoints) {
       return points;
@@ -58,4 +52,4 @@ geohash64.GoogleHash64 = (function(_super) {
 
   return GoogleHash64;
 
-})(ns2.BaseObject);
+})();

@@ -1,8 +1,7 @@
 ###############################################################################
 # GeoHash64 Class
 ###############################################################################
-namespace 'geohash64'
-class geohash64.GeoHash64
+class GeoHash64
   constructor: (hash, precision = 5) ->
     throw new Error 'Argument is invalid' unless _.isString hash
     @hash = hash
@@ -12,7 +11,7 @@ class geohash64.GeoHash64
     @hash2geo()
 
   toString: =>
-    """geohash64.GeoHash64:
+    """GeoHash64:
             hash: #{@hash},
             center_ll: #{@center_ll},
             south_west_ll: #{@south_west_ll},
@@ -21,8 +20,8 @@ class geohash64.GeoHash64
             precision: #{@precision}
     """
   hash2geo: =>
-    decimal_list = [geohash64.codeMap[s] for s in @hash] # s = "Z"
-#    decimal_list = _(@hash).map (s) -> geohash64.codeMap[s] # s = "Z"
+    decimal_list = [codeMap[s] for s in @hash] # s = "Z"
+#    decimal_list = _(@hash).map (s) -> codeMap[s] # s = "Z"
     lat = 0.0
     lon = 0.0
     console.info decimal_list
@@ -38,15 +37,15 @@ class geohash64.GeoHash64
       lat /= 8 # >>=3
       lon /= 8 # >>=3
 
-    @ll = new geohash64.LatLon(lat * 180 - 90, lon * 360 - 180)
+    @ll = new LatLon(lat * 180 - 90, lon * 360 - 180)
 
     @set_error()
     @south_west_ll = @ll
     @center_ll = @ll.add @error
 
   set_error: =>
-    @error = new geohash64.LatLon 90.0 / 8 ** @precision, 180.0 / 8 ** @precision
-    @coordinate_error = new geohash64.Coordinate(
-      @ll.distance_to(new geohash64.LatLon(@ll.lat + @error.lat, @ll.lon)),
-      @ll.distance_to(new geohash64.LatLon(@ll.lat, @ll.lon + @error.lon))
+    @error = new LatLon 90.0 / 8 ** @precision, 180.0 / 8 ** @precision
+    @coordinate_error = new Coordinate(
+      @ll.distance_to(new LatLon(@ll.lat + @error.lat, @ll.lon)),
+      @ll.distance_to(new LatLon(@ll.lat, @ll.lon + @error.lon))
     )

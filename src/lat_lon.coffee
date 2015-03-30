@@ -1,8 +1,7 @@
 ###############################################################################
 # LatLon Class
 ###############################################################################
-namespace 'geohash64'
-class geohash64.LatLon extends ns2.BaseObject
+class LatLon
   constructor: (arg1, arg2) ->
     if _.isArray arg1
       lat = arg1[0]
@@ -16,7 +15,7 @@ class geohash64.LatLon extends ns2.BaseObject
       arg2Type = typeof arg2
       arg1Type = typeof arg1
       if arg2Type != arg1Type
-        throw new Error("arg1 to arg2 type mismatch: arg1 type: #{arg1Type}, arg2 type: #{arg2Type}");
+        throw new Error("arg1 to arg2 type mismatch: arg1 type: #{arg1Type}, arg2 type: #{arg2Type}")
     if not (-90 <= lat and lat <= 90)
       throw new Error('lat is out of range.')
     if not (-180 <= lon and lon <= 180)
@@ -25,7 +24,7 @@ class geohash64.LatLon extends ns2.BaseObject
     @lon = Number(lon)
 
   toString: =>
-    """geohash64.LatLon unit='degree'
+    """LatLon unit='degree'
     lat:#{@lat}, lon:#{@lon},
     """
 
@@ -58,11 +57,11 @@ class geohash64.LatLon extends ns2.BaseObject
         + ((lon_int << 1) & 4)
         + ((lat_int << 1) & 2)
         + ((lon_int << 0) & 1)
-#        console.log "geohash64: #{geohash64.codeMap}"
-#        console.log "HASH STRING: #{geohash64.indexStr}"
-        hash += geohash64.indexStr[index]
+#        console.log "geohash64: #{codeMap}"
+#        console.log "HASH STRING: #{indexStr}"
+        hash += indexStr[index]
 
-    return new geohash64.GeoHash64(hash)
+    return new GeoHash64(hash)
 
   distance_to:(another_LatLon)=>
     @distance_from(another_LatLon)

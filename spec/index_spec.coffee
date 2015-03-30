@@ -1,3 +1,7 @@
+should = require 'should'
+_ = require 'lodash'
+geohash64 = require '../dist/index.js'
+
 # encoding: utf-8
 ###
 ported from @a_dat's geohash64Test.py
@@ -166,6 +170,7 @@ describe 'geohash64', ->
           it "#{googlesFullHash} to #{googlesPoints}", ->
             geohash64.decode(googlesFullHash,true).should.eql googlesPoints
           it 'smaller', ->
+            # console.log geohash64, true
             geohash64.decode('wrcdDfqtgNl|pJfhjB',true).should.eql [
               [27.05724,-80.06436], #tested with googles decoder
               [25.16325,-80.61368]

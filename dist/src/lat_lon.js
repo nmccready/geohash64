@@ -1,18 +1,13 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var LatLon,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-namespace('geohash64');
-
-geohash64.LatLon = (function(_super) {
-  __extends(LatLon, _super);
-
+LatLon = (function() {
   function LatLon(arg1, arg2) {
-    this.distance_from = __bind(this.distance_from, this);
-    this.distance_to = __bind(this.distance_to, this);
-    this.getGeoHash = __bind(this.getGeoHash, this);
-    this.add = __bind(this.add, this);
-    this.toString = __bind(this.toString, this);
+    this.distance_from = bind(this.distance_from, this);
+    this.distance_to = bind(this.distance_to, this);
+    this.getGeoHash = bind(this.getGeoHash, this);
+    this.add = bind(this.add, this);
+    this.toString = bind(this.toString, this);
     var arg1Type, arg2Type, lat, lon;
     if (_.isArray(arg1)) {
       lat = arg1[0];
@@ -42,7 +37,7 @@ geohash64.LatLon = (function(_super) {
   }
 
   LatLon.prototype.toString = function() {
-    return "geohash64.LatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon + ",";
+    return "LatLon unit='degree'\nlat:" + this.lat + ", lon:" + this.lon + ",";
   };
 
   LatLon.prototype.add = function(ll) {
@@ -50,7 +45,7 @@ geohash64.LatLon = (function(_super) {
   };
 
   LatLon.prototype.getGeoHash = function(precision) {
-    var hash, i, lat, lon, _fn, _i;
+    var fn, hash, i, j, lat, lon, ref;
     if (precision == null) {
       precision = 10;
     }
@@ -60,7 +55,7 @@ geohash64.LatLon = (function(_super) {
     lat = (this.lat + 90) / 180;
     lon = (this.lon + 180) / 360;
     hash = '';
-    _fn = function(i) {
+    fn = function(i) {
       var index, lat_int, lon_int;
       lat *= 8;
       lon *= 8;
@@ -72,12 +67,12 @@ geohash64.LatLon = (function(_super) {
       +((lon_int << 1) & 4);
       +((lat_int << 1) & 2);
       +((lon_int << 0) & 1);
-      return hash += geohash64.indexStr[index];
+      return hash += indexStr[index];
     };
-    for (i = _i = 0; _i < precision; i = _i += 1) {
-      _fn(i);
+    for (i = j = 0, ref = precision; j < ref; i = j += 1) {
+      fn(i);
     }
-    return new geohash64.GeoHash64(hash);
+    return new GeoHash64(hash);
   };
 
   LatLon.prototype.distance_to = function(another_LatLon) {
@@ -108,4 +103,4 @@ geohash64.LatLon = (function(_super) {
 
   return LatLon;
 
-})(ns2.BaseObject);
+})();

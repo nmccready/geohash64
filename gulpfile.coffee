@@ -1,5 +1,5 @@
-String.prototype.contains = (searchStr) ->
-  this.indexOf(searchStr) != -1
+contains = (toSearch,searchStr) ->
+  toSearch.indexOf(searchStr) != -1
 
 _ = require 'lodash'
 gulp = require "gulp"

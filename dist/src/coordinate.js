@@ -1,16 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var Coordinate,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-namespace('geohash64');
-
-geohash64.Coordinate = (function() {
+Coordinate = (function() {
   function Coordinate(n, e) {
-    this.toString = __bind(this.toString, this);
+    this.toString = bind(this.toString, this);
     this.n = n;
     this.e = e;
   }
 
   Coordinate.prototype.toString = function() {
-    return "geohash64.Coordinate: n: " + this.n + ", e: " + this.e;
+    return "Coordinate: n: " + this.n + ", e: " + this.e;
   };
 
   return Coordinate;

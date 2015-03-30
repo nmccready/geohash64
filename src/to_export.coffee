@@ -1,5 +1,5 @@
 pkg = require '../package.json'
-namespace 'geohash64'
+
 ###
   encode:
   arguments:
@@ -7,7 +7,7 @@ namespace 'geohash64'
     (precision): number of decimal place accuracy
     (encoder): a LatLon object type to use as the encoding object
 ###
-geohash64.encode = (latLonArray, precision = 5, encoder = geohash64.GoogleLatLon)->
+_encode = (latLonArray, precision = 5, encoder = GoogleLatLon)->
 #  console.log "latLonArray: #{latLonArray}"
   throw new Error('One location pair must exist') unless latLonArray?.length
   allAreValid = _.all latLonArray, (latLon) ->
@@ -23,7 +23,7 @@ geohash64.encode = (latLonArray, precision = 5, encoder = geohash64.GoogleLatLon
     finalHash += latLon.getGeoHash(precision).hash
   finalHash
 
-geohash64.decode = (hash, doConvertToLatLonArrayOfArray, decoder = geohash64.GoogleHash64, type = 'geohash64.GoogleHash64')->
+_decode = (hash, doConvertToLatLonArrayOfArray, decoder = GoogleHash64, type = 'GoogleHash64')->
   hasher = new decoder(hash, true)
   points = hasher.hash2geo(doReturnPoints = true)
   return points if not doConvertToLatLonArrayOfArray
@@ -31,18 +31,18 @@ geohash64.decode = (hash, doConvertToLatLonArrayOfArray, decoder = geohash64.Goo
     [latLon.lat, latLon.lon]
 
 module.exports =
-  encode: geohash64.encode
-  decode: geohash64.decode
+  encode: _encode
+  decode: _decode
   encodeZoom: (intNum) ->
-    geohash64.GoogleCoder.encode intNum, isZoom = true
+    GoogleCoder.encode intNum, isZoom = true
   decodeZoom: (hash) ->
-    geohash64.GoogleCoder.decode hash, isZoom = true, isSingle = true
+    GoogleCoder.decode hash, isZoom = true, isSingle = true
 
-  LatLon: geohash64.LatLon
-  Coordinate: geohash64.Coordinate
-  GeoHash64: geohash64.GeoHash64
-  GoogleLatLon: geohash64.GoogleLatLon
-  GoogleHash64: geohash64.GoogleHash64
-  GoogleCoder: geohash64.GoogleCoder
+  LatLon: LatLon
+  Coordinate: Coordinate
+  GeoHash64: GeoHash64
+  GoogleLatLon: GoogleLatLon
+  GoogleHash64: GoogleHash64
+  GoogleCoder: GoogleCoder
   name: pkg.name
   version: pkg.version

@@ -2,34 +2,17 @@
 /*
   load with utf-8 encoding!!!!!!!!!!!!
  */
-var chunkSize, decodeCoord, float2int, geohash64, getChunks, getGlobal, mask, maybeFlip, namespace, ns2, ord, rounded, _;
-
-getGlobal = function() {
-  if (isNode) {
-    return global;
-  } else {
-    return window;
-  }
-};
-
-if (isNode) {
-  _ = require('lodash');
-  ns2 = require('ns2');
-  namespace = ns2.namespace;
-}
-
-namespace('geohash64');
-
 
 /*
  * base64url characters
  */
+var chunkSize, decodeCoord, float2int, geohash64, getChunks, mask, maybeFlip, ord, rounded;
 
 geohash64 = (function() {
-  var codeMap, i, indexStr, _i, _ref;
+  var codeMap, i, indexStr, j, ref;
   indexStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
   codeMap = {};
-  for (i = _i = 0, _ref = indexStr.length; _i <= _ref; i = _i += 1) {
+  for (i = j = 0, ref = indexStr.length; j <= ref; i = j += 1) {
     codeMap[indexStr[i]] = i;
   }
   return {

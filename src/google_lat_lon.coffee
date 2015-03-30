@@ -13,20 +13,19 @@
     (((((maybeFlip((rounded)<< 1))>>20)  <<5>>5) & 0x1F)|0x20) + 63 = 97
     (((((maybeFlip((rounded)<< 1))>>25)  <<0>>0) & 0x1F)) + 63 = 64 (final no 5 bit chunks left no OR of 0x20)
 ###
-namespace 'geohash64'
-class geohash64.GoogleLatLon extends geohash64.LatLon
-  @include geohash64.GoogleCoder
+class GoogleLatLon extends LatLon
   constructor: (arg1, arg2) ->
+    _.extend @, GoogleCoder
     super(arg1,arg2)
     if arg2? and _.isArray arg2
       previousCoord = arg2
       @from =
-        new geohash64.GoogleLatLon previousCoord
+        new GoogleLatLon previousCoord
       @magnitude =
-        new geohash64.GoogleLatLon @lat - @from.lat, @lon - @from.lon
+        new GoogleLatLon @lat - @from.lat, @lon - @from.lon
 
   toString: =>
-    """geohash64.GoogleLatLon unit='degree'
+    """GoogleLatLon unit='degree'
     lat:#{@lat}, lon:#{@lon}
     """
   toEqual: (other) =>
@@ -45,4 +44,4 @@ class geohash64.GoogleLatLon extends geohash64.LatLon
 #    console.log "set: #{set}"
     set.map (coord) =>
       hash += @encode coord
-    return new geohash64.GoogleHash64(hash,@) #pass @ to not have to decode
+    return new GoogleHash64(hash,@) #pass @ to not have to decode

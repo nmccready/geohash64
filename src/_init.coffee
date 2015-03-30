@@ -1,16 +1,7 @@
 ###
   load with utf-8 encoding!!!!!!!!!!!!
 ###
-getGlobal = ->
-  if isNode then global else window
 
-if isNode
-  _ = require 'lodash'
-  #  math = require 'math'
-  ns2 = require 'ns2'
-  namespace = ns2.namespace
-
-namespace 'geohash64'
 ###
 # base64url characters
 ###

@@ -1,8 +1,6 @@
-var pkg;
+var _decode, _encode, pkg;
 
 pkg = require('../package.json');
-
-namespace('geohash64');
 
 
 /*
@@ -13,13 +11,13 @@ namespace('geohash64');
     (encoder): a LatLon object type to use as the encoding object
  */
 
-geohash64.encode = function(latLonArray, precision, encoder) {
+_encode = function(latLonArray, precision, encoder) {
   var allAreValid, finalHash, previous;
   if (precision == null) {
     precision = 5;
   }
   if (encoder == null) {
-    encoder = geohash64.GoogleLatLon;
+    encoder = GoogleLatLon;
   }
   if (!(latLonArray != null ? latLonArray.length : void 0)) {
     throw new Error('One location pair must exist');
@@ -41,13 +39,13 @@ geohash64.encode = function(latLonArray, precision, encoder) {
   return finalHash;
 };
 
-geohash64.decode = function(hash, doConvertToLatLonArrayOfArray, decoder, type) {
+_decode = function(hash, doConvertToLatLonArrayOfArray, decoder, type) {
   var doReturnPoints, hasher, points;
   if (decoder == null) {
-    decoder = geohash64.GoogleHash64;
+    decoder = GoogleHash64;
   }
   if (type == null) {
-    type = 'geohash64.GoogleHash64';
+    type = 'GoogleHash64';
   }
   hasher = new decoder(hash, true);
   points = hasher.hash2geo(doReturnPoints = true);
@@ -60,22 +58,22 @@ geohash64.decode = function(hash, doConvertToLatLonArrayOfArray, decoder, type) 
 };
 
 module.exports = {
-  encode: geohash64.encode,
-  decode: geohash64.decode,
+  encode: _encode,
+  decode: _decode,
   encodeZoom: function(intNum) {
     var isZoom;
-    return geohash64.GoogleCoder.encode(intNum, isZoom = true);
+    return GoogleCoder.encode(intNum, isZoom = true);
   },
   decodeZoom: function(hash) {
     var isSingle, isZoom;
-    return geohash64.GoogleCoder.decode(hash, isZoom = true, isSingle = true);
+    return GoogleCoder.decode(hash, isZoom = true, isSingle = true);
   },
-  LatLon: geohash64.LatLon,
-  Coordinate: geohash64.Coordinate,
-  GeoHash64: geohash64.GeoHash64,
-  GoogleLatLon: geohash64.GoogleLatLon,
-  GoogleHash64: geohash64.GoogleHash64,
-  GoogleCoder: geohash64.GoogleCoder,
+  LatLon: LatLon,
+  Coordinate: Coordinate,
+  GeoHash64: GeoHash64,
+  GoogleLatLon: GoogleLatLon,
+  GoogleHash64: GoogleHash64,
+  GoogleCoder: GoogleCoder,
   name: pkg.name,
   version: pkg.version
 };

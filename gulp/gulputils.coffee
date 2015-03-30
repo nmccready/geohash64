@@ -11,16 +11,6 @@ gulpif = require "gulp-if"
 jsToMin = (fileName) ->
   fileName.replace('.', '.min.')
 
-#handle globals
-String.prototype.toMin = ->
-  jsToMin this
-
-String.prototype.js = ->
-  this + ".js"
-
-String.prototype.css = ->
-  this + ".css"
-
 myClean = (fileORDirName, doMin) ->
   gulp.src(fileORDirName, read: false)
   .pipe do ->

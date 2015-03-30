@@ -1,4 +1,3 @@
-ns2.namespace 'geohash64'
 ###
  NOTE in testing this library against google; you are only garunteed to get matches
  (encded hash to decoded points) for up to 5 decimals of accuracy. Therefore if you
@@ -6,7 +5,7 @@ ns2.namespace 'geohash64'
 
  https://google-developers.appspot.com/maps/documentation/utilities/polylineutility_63b1683dd5bb00fea0eb2d1356fa8a61.frame?hl=en
 ###
-geohash64.GoogleCoder =
+GoogleCoder =
   encode: (value, isZoom) ->
     hash = ''
     value = rounded value unless isZoom
@@ -65,6 +64,6 @@ geohash64.GoogleCoder =
   round: (value, precision) ->
     value.toFixed precision
 
-  tuple: (left, right, factory = geohash64.GoogleLatLon) ->
+  tuple: (left, right, factory = GoogleLatLon) ->
 #    console.log "left: #{left}, right:#{right}"
     new factory(left, right)
