@@ -1,9 +1,9 @@
 /**
  *  geohash64
  *
- * @version: 1.0.3
+ * @version: 1.0.4
  * @author: Nicholas McCready
- * @date: Mon Mar 30 2015 15:48:40 GMT-0400 (EDT)
+ * @date: Thu May 28 2015 13:58:56 GMT-0400 (EDT)
  * @license: MIT
  */
 var glob = global || window;
@@ -307,7 +307,7 @@ GoogleCoder = {
     var chunkSet, coord_chunks, coords;
     coord_chunks = [[]];
     chunkSet = 0;
-    _(hash).each(function(char) {
+    _.each(hash, function(char) {
       var split_after, value;
       value = ord(char) - 63;
       split_after = !(value & 0x20);

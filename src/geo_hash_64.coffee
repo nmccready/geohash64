@@ -21,7 +21,7 @@ class GeoHash64
     """
   hash2geo: =>
     decimal_list = [codeMap[s] for s in @hash] # s = "Z"
-#    decimal_list = _(@hash).map (s) -> codeMap[s] # s = "Z"
+
     lat = 0.0
     lon = 0.0
     console.info decimal_list

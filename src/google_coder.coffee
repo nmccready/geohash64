@@ -31,7 +31,7 @@ GoogleCoder =
       []
     ]
     chunkSet = 0
-    _(hash).each (char) ->
+    _.each hash, (char) ->
 #      console.log "char: #{char}"
       # convert each character to decimal from ascii
       value = ord(char) - 63

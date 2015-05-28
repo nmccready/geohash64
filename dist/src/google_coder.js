@@ -31,7 +31,7 @@ GoogleCoder = {
     var chunkSet, coord_chunks, coords;
     coord_chunks = [[]];
     chunkSet = 0;
-    _(hash).each(function(char) {
+    _.each(hash, function(char) {
       var split_after, value;
       value = ord(char) - 63;
       split_after = !(value & 0x20);
