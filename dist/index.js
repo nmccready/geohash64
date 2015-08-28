@@ -1,9 +1,9 @@
 /**
  *  geohash64
  *
- * @version: 1.0.4
+ * @version: 1.0.5
  * @author: Nicholas McCready
- * @date: Fri Aug 28 2015 15:40:17 GMT-0400 (EDT)
+ * @date: Fri Aug 28 2015 15:43:01 GMT-0400 (EDT)
  * @license: MIT
  */
 var glob = global || window;

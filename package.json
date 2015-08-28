@@ -1,6 +1,6 @@
 {
   "name": "geohash64",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "ptyhon port attempt at a google maps base64 geohash of https://gist.github.com/signed0/2031157",
   "main": "./dist/index.js",
   "scripts": {
