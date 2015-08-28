@@ -3,11 +3,10 @@
  *
  * @version: 1.0.4
  * @author: Nicholas McCready
- * @date: Thu May 28 2015 13:58:56 GMT-0400 (EDT)
+ * @date: Fri Aug 28 2015 15:38:51 GMT-0400 (EDT)
  * @license: MIT
  */
 var glob = global || window;
-var _ = glob._? glob._ : require('lodash');
 (function(_){
 /*
   load with utf-8 encoding!!!!!!!!!!!!
@@ -546,4 +545,4 @@ module.exports = {
   version: pkg.version
 };
 
-})(_ || require('lodash'), undefined);
+})(glob._.isArray? glob._ : require('lodash'), undefined);

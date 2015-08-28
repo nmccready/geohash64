@@ -22,7 +22,13 @@ describe 'geohash64', ->
     console.log art
     console.log "\nname:#{geohash64.name}, version: #{geohash64.version}"
 
+  it 'exists', ->
+    geohash64.should.be.ok
+
   describe 'LatLon', ->
+    it 'exists', ->
+      geohash64.LatLon.should.be.ok
+      
     it 'can be created', ->
       ll = new geohash64.LatLon(35.4, 135.5)
       ll.lat.should.be.eql 35.4

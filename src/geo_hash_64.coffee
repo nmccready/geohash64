@@ -20,7 +20,7 @@ class GeoHash64
             precision: #{@precision}
     """
   hash2geo: =>
-    decimal_list = [codeMap[s] for s in @hash] # s = "Z"
+    decimal_list = ([codeMap[s] for s in @hash]) # s = "Z"
 
     lat = 0.0
     lon = 0.0

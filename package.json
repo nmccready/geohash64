@@ -15,7 +15,7 @@
   "author": "Nicholas McCready",
   "license": "MIT",
   "dependencies": {
-    "lodash": "~3.9.3"
+    "lodash": "^3.9.3"
     },
   "devDependencies": {
     "coffee-script": "^1.7.1",
