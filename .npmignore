@@ -5,3 +5,11 @@ gulp/
 .yml
 *.json
 *.coffee
+.idea/
+log/
+logs/
+tmp/
+.log
+#OSX
+.DS_Store
+nohup.out
