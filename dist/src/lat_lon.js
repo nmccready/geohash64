@@ -9,7 +9,7 @@ LatLon = (function() {
     this.add = bind(this.add, this);
     this.toString = bind(this.toString, this);
     var arg1Type, arg2Type, lat, lon;
-    if (_.isArray(arg1)) {
+    if (Array.isArray(arg1)) {
       lat = arg1[0];
       lon = arg1[1];
     } else {

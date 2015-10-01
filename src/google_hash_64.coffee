@@ -3,8 +3,8 @@
 ###############################################################################
 class GoogleHash64
   constructor: (@hash, @center_ll, @precision = 6) ->
-    _.extend @, GoogleCoder
-    throw new Error 'Argument is invalid' unless _.isString @hash
+    extend @, GoogleCoder
+    throw new Error 'Argument is invalid' unless typeof @hash is 'string'
     @hash2geo() unless @center_ll
 
   toString: =>

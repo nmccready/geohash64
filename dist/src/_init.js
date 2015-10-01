@@ -6,7 +6,7 @@
 /*
  * base64url characters
  */
-var chunkSize, decodeCoord, float2int, geohash64, getChunks, mask, maybeFlip, ord, rounded;
+var all, chunkSize, decodeCoord, extend, float2int, geohash64, getChunks, mask, maybeFlip, ord, rounded;
 
 geohash64 = (function() {
   var codeMap, i, indexStr, j, ref;
@@ -25,6 +25,28 @@ geohash64 = (function() {
 /*
   private (hidden) functions
  */
+
+extend = function(toExtend, extender) {
+  var field, fieldName;
+  for (fieldName in extender) {
+    field = extender[fieldName];
+    toExtend[fieldName] = field;
+  }
+  return toExtend;
+};
+
+all = function(coll, cb) {
+  var k, pass, val;
+  pass = true;
+  for (k in coll) {
+    val = coll[k];
+    if (!cb(val)) {
+      pass = false;
+      break;
+    }
+  }
+  return pass;
+};
 
 float2int = function(value) {
   return value | 0;

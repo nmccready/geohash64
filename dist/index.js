@@ -3,11 +3,10 @@
  *
  * @version: 1.0.5
  * @author: Nicholas McCready
- * @date: Fri Aug 28 2015 15:43:01 GMT-0400 (EDT)
+ * @date: Thu Oct 01 2015 18:08:25 GMT-0400 (EDT)
  * @license: MIT
  */
-var glob = global || window;
-(function(_){
+(function(){
 /*
   load with utf-8 encoding!!!!!!!!!!!!
  */
@@ -15,7 +14,7 @@ var glob = global || window;
 /*
  * base64url characters
  */
-var chunkSize, decodeCoord, float2int, geohash64, getChunks, mask, maybeFlip, ord, rounded;
+var all, chunkSize, decodeCoord, extend, float2int, geohash64, getChunks, mask, maybeFlip, ord, rounded;
 
 geohash64 = (function() {
   var codeMap, i, indexStr, j, ref;
@@ -34,6 +33,28 @@ geohash64 = (function() {
 /*
   private (hidden) functions
  */
+
+extend = function(toExtend, extender) {
+  var field, fieldName;
+  for (fieldName in extender) {
+    field = extender[fieldName];
+    toExtend[fieldName] = field;
+  }
+  return toExtend;
+};
+
+all = function(coll, cb) {
+  var k, pass, val;
+  pass = true;
+  for (k in coll) {
+    val = coll[k];
+    if (!cb(val)) {
+      pass = false;
+      break;
+    }
+  }
+  return pass;
+};
 
 float2int = function(value) {
   return value | 0;
@@ -90,7 +111,7 @@ LatLon = (function() {
     this.add = bind(this.add, this);
     this.toString = bind(this.toString, this);
     var arg1Type, arg2Type, lat, lon;
-    if (_.isArray(arg1)) {
+    if (Array.isArray(arg1)) {
       lat = arg1[0];
       lon = arg1[1];
     } else {
@@ -215,7 +236,7 @@ GeoHash64 = (function() {
     this.set_error = bind(this.set_error, this);
     this.hash2geo = bind(this.hash2geo, this);
     this.toString = bind(this.toString, this);
-    if (!_.isString(hash)) {
+    if (typeof hash !== 'string') {
       throw new Error('Argument is invalid');
     }
     this.hash = hash;
@@ -285,7 +306,7 @@ var GoogleCoder;
 
 GoogleCoder = {
   encode: function(value, isZoom) {
-    var chunks, hash;
+    var asciiIndex, c, chunks, hash, hashToAdd, j, len;
     hash = '';
     if (!isZoom) {
       value = rounded(value);
@@ -294,36 +315,37 @@ GoogleCoder = {
       value = maybeFlip(value << 1);
     }
     chunks = getChunks(value);
-    chunks.forEach(function(c) {
-      var asciiIndex, hashToAdd;
+    for (j = 0, len = chunks.length; j < len; j++) {
+      c = chunks[j];
       asciiIndex = c + 63;
       hashToAdd = String.fromCharCode(asciiIndex);
-      return hash += hashToAdd;
-    });
+      hash += hashToAdd;
+    }
     return hash;
   },
   decode: function(hash, isZoomLevel, isSingle) {
-    var chunkSet, coord_chunks, coords;
+    var char, chunkSet, coord_chunks, coords, k, split_after, value;
     coord_chunks = [[]];
     chunkSet = 0;
-    _.each(hash, function(char) {
-      var split_after, value;
+    for (k in hash) {
+      char = hash[k];
       value = ord(char) - 63;
       split_after = !(value & 0x20);
       value &= mask;
       coord_chunks[chunkSet].push(value);
       if (split_after) {
         chunkSet += 1;
-        return coord_chunks.push([]);
+        coord_chunks.push([]);
       }
-    });
+    }
     coord_chunks.pop();
     coords = coord_chunks.map(function(coord_chunk) {
-      var coord;
+      var chunk, coord, i;
       coord = 0;
-      coord_chunk.forEach(function(chunk, i) {
-        return coord |= chunk << (i * 5);
-      });
+      for (i in coord_chunk) {
+        chunk = coord_chunk[i];
+        coord |= chunk << (i * 5);
+      }
       if (!isZoomLevel) {
         coord = decodeCoord(coord);
       }
@@ -355,8 +377,8 @@ GoogleHash64 = (function() {
     this.precision = precision != null ? precision : 6;
     this.hash2geo = bind(this.hash2geo, this);
     this.toString = bind(this.toString, this);
-    _.extend(this, GoogleCoder);
-    if (!_.isString(this.hash)) {
+    extend(this, GoogleCoder);
+    if (typeof this.hash !== 'string') {
       throw new Error('Argument is invalid');
     }
     if (!this.center_ll) {
@@ -419,20 +441,20 @@ GoogleHash64 = (function() {
  */
 var GoogleLatLon,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  extend1 = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 GoogleLatLon = (function(superClass) {
-  extend(GoogleLatLon, superClass);
+  extend1(GoogleLatLon, superClass);
 
   function GoogleLatLon(arg1, arg2) {
     this.getGeoHash = bind(this.getGeoHash, this);
     this.toEqual = bind(this.toEqual, this);
     this.toString = bind(this.toString, this);
     var previousCoord;
-    _.extend(this, GoogleCoder);
+    extend(this, GoogleCoder);
     GoogleLatLon.__super__.constructor.call(this, arg1, arg2);
-    if ((arg2 != null) && _.isArray(arg2)) {
+    if ((arg2 != null) && Array.isArray(arg2)) {
       previousCoord = arg2;
       this.from = new GoogleLatLon(previousCoord);
       this.magnitude = new GoogleLatLon(this.lat - this.from.lat, this.lon - this.from.lon);
@@ -479,7 +501,7 @@ pkg = require('../package.json');
  */
 
 _encode = function(latLonArray, precision, encoder) {
-  var allAreValid, finalHash, previous;
+  var allAreValid, array, finalHash, i, latLon, len, previous;
   if (precision == null) {
     precision = 5;
   }
@@ -489,7 +511,7 @@ _encode = function(latLonArray, precision, encoder) {
   if (!(latLonArray != null ? latLonArray.length : void 0)) {
     throw new Error('One location pair must exist');
   }
-  allAreValid = _.all(latLonArray, function(latLon) {
+  allAreValid = all(latLonArray, function(latLon) {
     return latLon.length === 2;
   });
   if (!allAreValid) {
@@ -497,12 +519,12 @@ _encode = function(latLonArray, precision, encoder) {
   }
   finalHash = '';
   previous = void 0;
-  latLonArray.forEach(function(array) {
-    var latLon;
+  for (i = 0, len = latLonArray.length; i < len; i++) {
+    array = latLonArray[i];
     latLon = new encoder(array, previous);
     previous = array;
-    return finalHash += latLon.getGeoHash(precision).hash;
-  });
+    finalHash += latLon.getGeoHash(precision).hash;
+  }
   return finalHash;
 };
 
@@ -545,4 +567,4 @@ module.exports = {
   version: pkg.version
 };
 
-})(glob._.isArray? glob._ : require('lodash'), undefined);
+})();

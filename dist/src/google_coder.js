@@ -10,7 +10,7 @@ var GoogleCoder;
 
 GoogleCoder = {
   encode: function(value, isZoom) {
-    var chunks, hash;
+    var asciiIndex, c, chunks, hash, hashToAdd, j, len;
     hash = '';
     if (!isZoom) {
       value = rounded(value);
@@ -19,36 +19,37 @@ GoogleCoder = {
       value = maybeFlip(value << 1);
     }
     chunks = getChunks(value);
-    chunks.forEach(function(c) {
-      var asciiIndex, hashToAdd;
+    for (j = 0, len = chunks.length; j < len; j++) {
+      c = chunks[j];
       asciiIndex = c + 63;
       hashToAdd = String.fromCharCode(asciiIndex);
-      return hash += hashToAdd;
-    });
+      hash += hashToAdd;
+    }
     return hash;
   },
   decode: function(hash, isZoomLevel, isSingle) {
-    var chunkSet, coord_chunks, coords;
+    var char, chunkSet, coord_chunks, coords, k, split_after, value;
     coord_chunks = [[]];
     chunkSet = 0;
-    _.each(hash, function(char) {
-      var split_after, value;
+    for (k in hash) {
+      char = hash[k];
       value = ord(char) - 63;
       split_after = !(value & 0x20);
       value &= mask;
       coord_chunks[chunkSet].push(value);
       if (split_after) {
         chunkSet += 1;
-        return coord_chunks.push([]);
+        coord_chunks.push([]);
       }
-    });
+    }
     coord_chunks.pop();
     coords = coord_chunks.map(function(coord_chunk) {
-      var coord;
+      var chunk, coord, i;
       coord = 0;
-      coord_chunk.forEach(function(chunk, i) {
-        return coord |= chunk << (i * 5);
-      });
+      for (i in coord_chunk) {
+        chunk = coord_chunk[i];
+        coord |= chunk << (i * 5);
+      }
       if (!isZoomLevel) {
         coord = decodeCoord(coord);
       }

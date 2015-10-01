@@ -17,6 +17,19 @@ geohash64 = do ->
 ###
   private (hidden) functions
 ###
+extend = (toExtend, extender) ->
+  for fieldName, field of extender
+    toExtend[fieldName] = field
+  toExtend
+
+all = (coll, cb) ->
+  pass = true
+  for k, val of coll
+    if !cb(val)
+      pass = false
+      break
+  pass
+
 float2int = (value) ->
   value | 0
 

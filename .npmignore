@@ -1,0 +1,7 @@
+dist/src
+src/
+spec/
+gulp/
+.yml
+*.json
+*.coffee

@@ -15,9 +15,9 @@
 ###
 class GoogleLatLon extends LatLon
   constructor: (arg1, arg2) ->
-    _.extend @, GoogleCoder
+    extend @, GoogleCoder
     super(arg1,arg2)
-    if arg2? and _.isArray arg2
+    if arg2? and Array.isArray arg2
       previousCoord = arg2
       @from =
         new GoogleLatLon previousCoord

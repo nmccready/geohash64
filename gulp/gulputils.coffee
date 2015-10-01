@@ -1,12 +1,11 @@
-_ = require 'lodash'
-gulp = require "gulp"
+gulp = require 'gulp'
 coffee = require 'gulp-coffee'
-concat = require "gulp-concat"
-rename = require "gulp-rename"
-log = require("gulp-util").log
-clean = require "gulp-rimraf"
+concat = require 'gulp-concat'
+rename = require 'gulp-rename'
+log = require('gulp-util').log
+clean = require 'gulp-rimraf'
 replace = require 'gulp-replace'
-gulpif = require "gulp-if"
+gulpif = require 'gulp-if'
 
 jsToMin = (fileName) ->
   fileName.replace('.', '.min.')
@@ -35,9 +34,9 @@ module.exports =
 
   formatPipePath: (pipeObj, origPath, prependPath, doLog) ->
     #grab original info and save all matches to the appPipe.js
-    origPath.dirname = origPath.dirname.replace(".", "")
+    origPath.dirname = origPath.dirname.replace('.', '')
     origPath.dirname = prependPath + origPath.dirname if prependPath
-    toMap = if origPath.dirname != "" then "#{origPath.dirname}/#{origPath.basename}#{origPath.extname}" else "#{origPath.basename}#{origPath.extname}"
+    toMap = if origPath.dirname != '' then "#{origPath.dirname}/#{origPath.basename}#{origPath.extname}" else "#{origPath.basename}#{origPath.extname}"
     pipeItem = toMap.replace('//', '/')
     log pipeItem if doLog
     pipeObj.mappedPipe.push pipeItem
@@ -78,4 +77,4 @@ module.exports =
     es.map (file, cb) ->
       log file.path
       cb()
-  bang: "!!!!"
+  bang: '!!!!'

@@ -16,20 +16,20 @@
  */
 var GoogleLatLon,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  extend1 = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 GoogleLatLon = (function(superClass) {
-  extend(GoogleLatLon, superClass);
+  extend1(GoogleLatLon, superClass);
 
   function GoogleLatLon(arg1, arg2) {
     this.getGeoHash = bind(this.getGeoHash, this);
     this.toEqual = bind(this.toEqual, this);
     this.toString = bind(this.toString, this);
     var previousCoord;
-    _.extend(this, GoogleCoder);
+    extend(this, GoogleCoder);
     GoogleLatLon.__super__.constructor.call(this, arg1, arg2);
-    if ((arg2 != null) && _.isArray(arg2)) {
+    if ((arg2 != null) && Array.isArray(arg2)) {
       previousCoord = arg2;
       this.from = new GoogleLatLon(previousCoord);
       this.magnitude = new GoogleLatLon(this.lat - this.from.lat, this.lon - this.from.lon);

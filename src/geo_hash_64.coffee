@@ -3,7 +3,7 @@
 ###############################################################################
 class GeoHash64
   constructor: (hash, precision = 5) ->
-    throw new Error 'Argument is invalid' unless _.isString hash
+    throw new Error 'Argument is invalid' unless typeof hash is 'string'
     @hash = hash
     @precision = @hash.length
     @south_west_ll = undefined

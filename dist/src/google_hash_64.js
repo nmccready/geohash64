@@ -8,8 +8,8 @@ GoogleHash64 = (function() {
     this.precision = precision != null ? precision : 6;
     this.hash2geo = bind(this.hash2geo, this);
     this.toString = bind(this.toString, this);
-    _.extend(this, GoogleCoder);
-    if (!_.isString(this.hash)) {
+    extend(this, GoogleCoder);
+    if (typeof this.hash !== 'string') {
       throw new Error('Argument is invalid');
     }
     if (!this.center_ll) {

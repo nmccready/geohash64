@@ -1,5 +1,4 @@
 should = require 'should'
-_ = require 'lodash'
 geohash64 = require '../dist/index.js'
 
 # encoding: utf-8
@@ -28,7 +27,7 @@ describe 'geohash64', ->
   describe 'LatLon', ->
     it 'exists', ->
       geohash64.LatLon.should.be.ok
-      
+
     it 'can be created', ->
       ll = new geohash64.LatLon(35.4, 135.5)
       ll.lat.should.be.eql 35.4

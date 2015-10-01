@@ -10,12 +10,12 @@ pkg = require '../package.json'
 _encode = (latLonArray, precision = 5, encoder = GoogleLatLon)->
 #  console.log "latLonArray: #{latLonArray}"
   throw new Error('One location pair must exist') unless latLonArray?.length
-  allAreValid = _.all latLonArray, (latLon) ->
+  allAreValid = all latLonArray, (latLon) ->
     latLon.length == 2
   throw new Error('All lat/lon objects are valid') unless allAreValid
   finalHash = ''
   previous = undefined
-  latLonArray.forEach (array) ->
+  for array in latLonArray
     # console.info "array: " + array
     # console.info "previous: " + previous
     latLon = new encoder(array,previous)

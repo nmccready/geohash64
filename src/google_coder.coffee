@@ -16,7 +16,7 @@ GoogleCoder =
     #Step 5 - 8
     chunks = getChunks value
     # Step 9-10
-    chunks.forEach (c) ->
+    for c in chunks
       asciiIndex = c + 63
       #        console.log "asciiIndex: #{asciiIndex}"
       hashToAdd = String.fromCharCode asciiIndex
@@ -31,7 +31,7 @@ GoogleCoder =
       []
     ]
     chunkSet = 0
-    _.each hash, (char) ->
+    for k, char of hash
 #      console.log "char: #{char}"
       # convert each character to decimal from ascii
       value = ord(char) - 63
@@ -45,12 +45,9 @@ GoogleCoder =
         coord_chunks.push []
     coord_chunks.pop() #last set is bogus
 
-    #    console.log "COORD CHUNKS: #{coord_chunks}"
-    #    coord_chunks.forEach (chunk,key) ->
-    #      console.log "coord #{key}: chunk val #{chunk}"
     coords = coord_chunks.map (coord_chunk) ->
       coord = 0
-      coord_chunk.forEach (chunk, i) ->
+      for i, chunk of coord_chunk
         coord |= chunk << (i * 5)
       #there is a 1 on the right if the coord is negative
       unless isZoomLevel

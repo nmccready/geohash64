@@ -9,7 +9,7 @@ GeoHash64 = (function() {
     this.set_error = bind(this.set_error, this);
     this.hash2geo = bind(this.hash2geo, this);
     this.toString = bind(this.toString, this);
-    if (!_.isString(hash)) {
+    if (typeof hash !== 'string') {
       throw new Error('Argument is invalid');
     }
     this.hash = hash;

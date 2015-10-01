@@ -12,7 +12,7 @@ pkg = require('../package.json');
  */
 
 _encode = function(latLonArray, precision, encoder) {
-  var allAreValid, finalHash, previous;
+  var allAreValid, array, finalHash, i, latLon, len, previous;
   if (precision == null) {
     precision = 5;
   }
@@ -22,7 +22,7 @@ _encode = function(latLonArray, precision, encoder) {
   if (!(latLonArray != null ? latLonArray.length : void 0)) {
     throw new Error('One location pair must exist');
   }
-  allAreValid = _.all(latLonArray, function(latLon) {
+  allAreValid = all(latLonArray, function(latLon) {
     return latLon.length === 2;
   });
   if (!allAreValid) {
@@ -30,12 +30,12 @@ _encode = function(latLonArray, precision, encoder) {
   }
   finalHash = '';
   previous = void 0;
-  latLonArray.forEach(function(array) {
-    var latLon;
+  for (i = 0, len = latLonArray.length; i < len; i++) {
+    array = latLonArray[i];
     latLon = new encoder(array, previous);
     previous = array;
-    return finalHash += latLon.getGeoHash(precision).hash;
-  });
+    finalHash += latLon.getGeoHash(precision).hash;
+  }
   return finalHash;
 };
 

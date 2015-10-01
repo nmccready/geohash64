@@ -1,4 +1,4 @@
-module.exports = (_, gulp, coffee, concat, rename, log, clean, gulpif, coffeelint, serve, ignore, es,
+module.exports = (gulp, coffee, concat, rename, log, clean, gulpif, coffeelint, serve, ignore, es,
                   debug, help, ourUtils, replace, gzip, tar, insert, mocha, ourPackage, karma, open) ->
   coffeeOptions =
     bare: true
@@ -26,9 +26,8 @@ module.exports = (_, gulp, coffee, concat, rename, log, clean, gulpif, coffeelin
     .pipe(ourUtils.onlyDirs(es))
     .pipe(gulp.dest('dist/src'))
     .pipe(concat('index.js'))
-    .pipe(insert.prepend('\n(function(_){'))
-    .pipe(insert.prepend('\nvar glob = global || window;'))
-    .pipe(insert.append("\n})(glob._.isArray? glob._ : require('lodash'), undefined);"))
+    .pipe(insert.prepend('\n(function(){'))
+    .pipe(insert.append('\n})();'))
     .pipe(insert.prepend(header))
     .pipe(gulp.dest('dist'))
 

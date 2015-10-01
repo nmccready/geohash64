@@ -3,7 +3,7 @@
 ###############################################################################
 class LatLon
   constructor: (arg1, arg2) ->
-    if _.isArray arg1
+    if Array.isArray arg1
       lat = arg1[0]
       lon = arg1[1]
     else
