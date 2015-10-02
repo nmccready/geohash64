@@ -1,9 +1,9 @@
 /**
  *  geohash64
  *
- * @version: 1.0.6
+ * @version: 1.0.7
  * @author: Nicholas McCready
- * @date: Thu Oct 01 2015 20:56:33 GMT-0400 (EDT)
+ * @date: Thu Oct 01 2015 20:57:36 GMT-0400 (EDT)
  * @license: MIT
  */
 (function(){
