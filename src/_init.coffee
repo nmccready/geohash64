@@ -17,14 +17,20 @@ geohash64 = do ->
 ###
   private (hidden) functions
 ###
+each = (coll, cb) ->
+  for key, val of coll
+    break if !coll.hasOwnProperty(key)
+    cb(val, key)
+
 extend = (toExtend, extender) ->
-  for fieldName, field of extender
+  each extender, (field, fieldName) ->
     toExtend[fieldName] = field
   toExtend
 
 all = (coll, cb) ->
   pass = true
   for k, val of coll
+    break unless !coll.hasOwnProperty(k)
     if !cb(val)
       pass = false
       break

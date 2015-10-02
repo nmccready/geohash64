@@ -31,7 +31,7 @@ GoogleCoder =
       []
     ]
     chunkSet = 0
-    for k, char of hash
+    for char in hash
 #      console.log "char: #{char}"
       # convert each character to decimal from ascii
       value = ord(char) - 63
@@ -47,7 +47,7 @@ GoogleCoder =
 
     coords = coord_chunks.map (coord_chunk) ->
       coord = 0
-      for i, chunk of coord_chunk
+      each coord_chunk, (chunk, i)->
         coord |= chunk << (i * 5)
       #there is a 1 on the right if the coord is negative
       unless isZoomLevel

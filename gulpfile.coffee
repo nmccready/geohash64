@@ -4,27 +4,63 @@ contains = (toSearch,searchStr) ->
 gulp = require 'gulp'
 coffee = require 'gulp-coffee'
 concat = require 'gulp-concat'
-rename = require 'gulp-rename'
-gutil = require 'gulp-util'
-log = gutil.log
-clean = require 'gulp-rimraf'
+{log} = require 'gulp-util'
 gulpif = require 'gulp-if'
 coffeelint = require 'gulp-coffeelint'
-serve = require 'gulp-serve'
-open = require 'gulp-open'
-ignore = require 'gulp-ignore'
-es = require 'event-stream'
 debug = require 'gulp-debug'
-help = require 'gulp-task-listing' #command avail cgulp help (shows all tasks)
-ourUtils = require './gulp/gulputils'
-replace = require 'gulp-replace'
-gzip = require 'gulp-gzip'
-tar = require 'gulp-tar'
+del = require 'del'
 insert = require 'gulp-insert'
 mocha = require 'gulp-mocha'
 ourPackage = require './package.json'
-karma = require 'gulp-karma'
-open = require 'gulp-open'
 
-main = require('./gulp/gulpmain')(gulp, coffee, concat, rename, log, clean, gulpif, coffeelint, serve, ignore, es,
-    debug, help, ourUtils, replace, gzip, tar, insert, mocha, ourPackage, karma, open)
+coffeeOptions =
+  bare: true
+date = new Date()
+header =
+  """
+  /**
+   *  #{ourPackage.name}
+   *
+   * @version: #{ourPackage.version}
+   * @author: #{ourPackage.author}
+   * @date: #{date.toString()}
+   * @license: #{ourPackage.license}
+   */
+  """
+
+gulp.task 'clean', (cb) ->
+  del 'dist', cb
+
+gulp.task 'cleanDistSrc', (cb) ->
+  del 'dist/src', cb
+
+gulp.task 'build', gulp.series ->
+  gulp.src([
+    'src/_init*'
+    'src/lat_lon*'
+    'src/coord*'
+    'src/geo*'
+    'src/google_coder*'
+    'src/goog*'
+    'src/to_export*'
+  ], {base: 'src'})
+  .pipe gulpif(/[.]coffee$/,coffeelint())
+  .pipe gulpif(/[.]coffee$/,coffeelint.reporter())
+  .pipe gulpif(/[.]coffee$/,coffee(coffeeOptions).on('error', log))
+  .pipe(gulp.dest('dist/src'))
+  .pipe(concat('index.js'))
+  .pipe(insert.prepend('\n(function(){'))
+  .pipe(insert.append('\n})();'))
+  .pipe(insert.prepend(header))
+  .pipe(gulp.dest('dist'))
+, 'cleanDistSrc'
+
+gulp.task 'spec', ->
+  gulp.src('spec/*.coffee')
+  .pipe mocha(reporter: 'spec')
+
+gulp.task 'watch', ->
+  gulp.watch 'src/**/*', gulp.series 'default'
+  gulp.watch 'spec/**/*', gulp.series 'spec'
+
+gulp.task 'default', gulp.series 'clean', 'build', 'spec', 'watch'

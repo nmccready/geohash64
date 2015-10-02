@@ -1,9 +1,9 @@
 /**
  *  geohash64
  *
- * @version: 1.0.5
+ * @version: 1.0.6
  * @author: Nicholas McCready
- * @date: Thu Oct 01 2015 18:08:25 GMT-0400 (EDT)
+ * @date: Thu Oct 01 2015 20:56:33 GMT-0400 (EDT)
  * @license: MIT
  */
 (function(){
@@ -14,7 +14,7 @@
 /*
  * base64url characters
  */
-var all, chunkSize, decodeCoord, extend, float2int, geohash64, getChunks, mask, maybeFlip, ord, rounded;
+var all, chunkSize, decodeCoord, each, extend, float2int, geohash64, getChunks, mask, maybeFlip, ord, rounded;
 
 geohash64 = (function() {
   var codeMap, i, indexStr, j, ref;
@@ -34,12 +34,23 @@ geohash64 = (function() {
   private (hidden) functions
  */
 
-extend = function(toExtend, extender) {
-  var field, fieldName;
-  for (fieldName in extender) {
-    field = extender[fieldName];
-    toExtend[fieldName] = field;
+each = function(coll, cb) {
+  var key, results, val;
+  results = [];
+  for (key in coll) {
+    val = coll[key];
+    if (!coll.hasOwnProperty(key)) {
+      break;
+    }
+    results.push(cb(val, key));
   }
+  return results;
+};
+
+extend = function(toExtend, extender) {
+  each(extender, function(field, fieldName) {
+    return toExtend[fieldName] = field;
+  });
   return toExtend;
 };
 
@@ -48,6 +59,9 @@ all = function(coll, cb) {
   pass = true;
   for (k in coll) {
     val = coll[k];
+    if (!!coll.hasOwnProperty(k)) {
+      break;
+    }
     if (!cb(val)) {
       pass = false;
       break;
@@ -324,11 +338,11 @@ GoogleCoder = {
     return hash;
   },
   decode: function(hash, isZoomLevel, isSingle) {
-    var char, chunkSet, coord_chunks, coords, k, split_after, value;
+    var char, chunkSet, coord_chunks, coords, j, len, split_after, value;
     coord_chunks = [[]];
     chunkSet = 0;
-    for (k in hash) {
-      char = hash[k];
+    for (j = 0, len = hash.length; j < len; j++) {
+      char = hash[j];
       value = ord(char) - 63;
       split_after = !(value & 0x20);
       value &= mask;
@@ -340,12 +354,11 @@ GoogleCoder = {
     }
     coord_chunks.pop();
     coords = coord_chunks.map(function(coord_chunk) {
-      var chunk, coord, i;
+      var coord;
       coord = 0;
-      for (i in coord_chunk) {
-        chunk = coord_chunk[i];
-        coord |= chunk << (i * 5);
-      }
+      each(coord_chunk, function(chunk, i) {
+        return coord |= chunk << (i * 5);
+      });
       if (!isZoomLevel) {
         coord = decodeCoord(coord);
       }
